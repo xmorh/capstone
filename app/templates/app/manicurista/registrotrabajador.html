@@ -1,0 +1,27 @@
+
+{% extends 'app/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="container mx-auto py-28 px-6 bg-white rounded-lg shadow-lg max-w-lg">
+    <h2 class="text-3xl font-bold text-center mb-6 text-[#FF1493]">Trabaja con Nosotros</h2>
+    <p class="text-lg text-gray-700 text-center mb-10">
+        Por favor, sube una foto de perfil y tus certificaciones en formato PDF.
+    </p>
+    
+    <form>
+        <div class="mb-6">
+            <label for="profile_picture" class="block mb-2 text-sm font-medium text-gray-700">Foto de Perfil</label>
+            <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]" required>
+        </div>
+
+        <div class="mb-6">
+            <label for="certifications" class="block mb-2 text-sm font-medium text-gray-700">Certificaciones (PDF)</label>
+            <input type="file" id="certifications" name="certifications" accept=".pdf" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]" required>
+            <p class="text-sm text-gray-500 mt-2">Puedes subir múltiples archivos si es necesario.</p>
+        </div>
+
+        <!-- Botón de Enviar -->
+        <button type="submit" class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300">Enviar</button>
+    </form>
+</div>
+{% endblock %}

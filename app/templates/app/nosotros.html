@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="bg-gray-100">
+    <!-- Sección de Quienes Somos -->
+    <section class="container mx-auto py-20 px-6">
+        <h2 class="text-5xl text-black font-bold mb-10 text-center">Quiénes Somos</h2>
+        
+        <div class="flex flex-col md:flex-row items-center justify-between bg-white p-12 rounded-lg shadow-lg space-y-8 md:space-y-0 md:space-x-8">
+            <!-- Texto -->
+            <div class="md:w-1/2">
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    En <strong class="text-[#DE98B1]">NailTime</strong>, somos una comunidad dedicada a conectar manicuristas y clientes en un ambiente de confianza y comodidad. Nuestro objetivo es ofrecer una plataforma donde puedas encontrar y reservar citas con los mejores profesionales del cuidado de uñas en tu área.
+                </p>
+
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    Nuestra plataforma ofrece la flexibilidad y accesibilidad que necesitas. Aquí podrás <strong>reservar</strong> y <strong>cancelar</strong> tus citas de forma rápida y sencilla, además de elegir al manicurista que mejor se adapte a tus preferencias y necesidades. Ya sea que busques una manicura clásica o los últimos estilos en uñas acrílicas, encontrarás la opción perfecta en NailTime.
+                </p>
+
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    Los manicuristas que forman parte de nuestra comunidad son profesionales cuidadosamente seleccionados, con horarios adaptados para ofrecerte la mejor experiencia posible. Podrás conocer su portafolio, opiniones de otros clientes y decidir quién será el encargado de tu próxima cita. 
+                </p>
+
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Al unirte a <strong class="text-[#DE98B1]">NailTime</strong>, te unes a una comunidad que prioriza la conexión y la confianza, asegurando que cada cliente y manicurista encuentre lo que busca: calidad, facilidad y estilo.
+                </p>
+            </div>
+
+            <!-- Imagenes decorativas -->
+            <div class="md:w-1/2 flex flex-col items-center space-y-6">
+                <img src="{% static 'img/manicurista.jpg' %}" alt="" class="rounded-lg shadow-lg w-full h-72 object-cover">
+                <img src="{% static 'img/unas2.jpg' %}" alt="" class="rounded-lg shadow-lg w-full h-72 object-cover">
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

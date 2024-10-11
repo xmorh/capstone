@@ -1,0 +1,54 @@
+{% extends 'app/manicurista/baseManicurista.html' %}
+{% load static%}
+{% block contenido %}
+<div class="h-screen">
+    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Detalle Reserva Mensual</h2>
+
+    <div class=" flex items-center justify-center py-10">
+        <div class="max-w-4xl w-full bg-white rounded-lg shadow-lg p-6">
+
+            <!-- Tabla de Reservas -->
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-[#DE98B1] text-black">
+                        <th class="py-3 px-4">Tipo</th>
+                        <th class="py-3 px-4">Duración</th>
+                        <th class="py-3 px-4">Valor</th>
+                        <th class="py-3 px-4">Cliente</th>
+                        <th class="py-3 px-4">Hora</th>
+                        <th class="py-3 px-4">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-transparent text-black">
+                        <td class="py-3 px-4">Manicure Completa</td>
+                        <td class="py-3 px-4">1 hora</td>
+                        <td class="py-3 px-4">$25.000</td>
+                        <td class="py-3 px-4">María Pérez</td>
+                        <td class="py-3 px-4">10:00 AM</td>
+                        <td class="py-3 px-4 text-center">
+                            <button
+                                class="bg-[#DA0000] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
+                                Cancelar
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="bg-transparent text-black">
+                        <td class="py-3 px-4">Manicure Express</td>
+                        <td class="py-3 px-4">30 minutos</td>
+                        <td class="py-3 px-4">$15.000</td>
+                        <td class="py-3 px-4">Ana López</td>
+                        <td class="py-3 px-4">11:30 AM</td>
+                        <td class="py-3 px-4 text-center">
+                            <button
+                                class="bg-[#DA0000] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
+                                Cancelar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock%}

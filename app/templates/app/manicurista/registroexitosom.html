@@ -1,0 +1,18 @@
+
+{% extends 'app/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="w-full h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('{% static 'img/manicuristalimas.jpg' %}');">
+    <div class="p-8 text-center bg-white bg-opacity-85 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold mb-6 text-[#FF1493]">Registro Exitoso</h2>
+        <p class="text-lg text-gray-700 mb-10">
+            El registro se ha completado con éxito. Por favor, espere a que su cuenta sea aprobada.
+        </p>
+
+        <!-- Botón de Volver al Inicio -->
+        <a href="{% url 'home' %}" class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300 inline-block">
+            Volver al Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}

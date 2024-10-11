@@ -1,0 +1,77 @@
+{% extends 'app/manicurista/baseManicurista.html' %}
+{% load static %}
+{% block contenido %}
+<!-- Mi Local -->
+<div class="flex min-h-screen bg-gray-100">
+    <!-- Panel Izquierdo -->
+    <div class="w-1/4 bg-[#DE98B1] shadow-lg">
+        <nav class="py-8">
+            <ul>
+
+                <!-- Botones de las secciones -->
+                <li class="mb-6 text-center ">
+                    <a href="{% url 'misdatos' %}"><button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mis Datos
+                        </button>
+                    </a>
+                    <a href="{% url 'misservicios' %}">
+                        <button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mis Servicios
+                        </button>
+                    </a>
+                    <a href="{% url 'milocal' %}">
+                        <button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mi Local
+                        </button>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="flex-1 p-10 bg-white shadow-lg rounded-lg">
+
+
+
+        <h2 class="text-2xl font-bold text-[#FF1493] text-center mb-4 py-5">Mi Local</h2>
+        <form>
+            <div class="mb-6">
+                <label for="salon" class="block mb-2 text-sm font-medium text-gray-700">Nombre del Salón o
+                    Negocio</label>
+                <input type="text" id="salon" value="Beauty Nails"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                    required>
+            </div>
+            <div class="mb-6">
+                <label for="contacto" class="block mb-2 text-sm font-medium text-gray-700">Número de
+                    contacto</label>
+                <input type="tel" id="contacto" value="+569 8765 4321"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                    required>
+            </div>
+            <div class="mb-6">
+                <label for="direccion" class="block mb-2 text-sm font-medium text-gray-700">Dirección</label>
+                <input type="text" id="direccion" value="Calle Falsa 123"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                    required>
+            </div>
+            <div class="mb-6">
+                <label for="comuna" class="block mb-2 text-sm font-medium text-gray-700">Comuna</label>
+                <input type="text" id="comuna" value="Santiago Centro"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                    required>
+            </div>
+            <div class="flex justify-end">
+                <button type="submit"
+                    class="bg-[#FF1493] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'app/manicurista/baseManicurista.html' %}
+{% load static %}
+{% block contenido %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NailTime</title>
+    {% load static %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script> -->
+
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="bg-black text-[#DE98B1] py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'img/logo.png' %}" alt="NailTime Logo" class="w-12 h-12">
+                </a>
+            </div>
+            <!-- Navigation Links -->
+            <nav class="space-x-8">
+                <!-- <a href="#" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis reservas</a> -->
+                <a href="{% url 'nosotros'%}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del
+                    Día</a>
+                <a href="{% url 'trabajaconnosotros' %}"
+                    class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del Mes</a>
+            </nav>
+            <!-- Profile Icon -->
+            <a href="{% url 'login' %}">
+                <img src="{% static 'img/login.png' %}" alt="Perfil" class="w-10 h-10 rounded-full">
+            </a>
+        </div>
+    </header>
+
+    
+    <div id="contenido">
+        {% block contenido %}
+        {%endblock%}
+    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Contact Information -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4">Contáctanos</h3>
+                <p class="mb-2">Teléfono: 12345</p>
+                <p class="mb-2">Correo: contacto@nailtime.com</p>
+                <p class="mb-2">Dirección: Av. Principal 123, Santiago</p>
+            </div>
+
+            <!-- About Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4">Sobre nosotros</h3>
+                <p class="mb-4">NailTime es una plataforma dedicada a conectar manicuristas con clientes, ofreciendo una
+                    experiencia fácil y conveniente para reservar citas de servicios de uñas.</p>
+            </div>
+
+            <!-- Social Media Links -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4">Síguenos</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-pink-500 hover:text-pink-700">Instagram</a>
+                    <a href="#" class="text-pink-500 hover:text-pink-700">Facebook</a>
+                    <a href="#" class="text-pink-500 hover:text-pink-700">Twitter</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="mt-8 border-t border-gray-700 pt-4 text-center">
+            <p class="text-sm text-gray-400">© 2024 NailTime. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
+
+{% endblock %}

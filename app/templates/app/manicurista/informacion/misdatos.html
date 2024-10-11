@@ -1,0 +1,88 @@
+{% extends 'app/manicurista/baseManicurista.html' %}
+{% load static %}
+{% block contenido %}
+<div class="flex min-h-screen bg-gray-100">
+    <!-- Panel Izquierdo -->
+    <div class="w-1/4 bg-[#DE98B1] shadow-lg">
+        <nav class="py-8">
+            <ul>
+
+                <!-- Botones de las secciones -->
+                <li class="mb-6 text-center ">
+                    <a href="{% url 'misdatos' %}"><button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mis Datos
+                        </button>
+                    </a>
+                    <a href="{% url 'misservicios' %}">
+                        <button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mis Servicios
+                        </button>
+                    </a>
+                    <a href="{% url 'milocal' %}">
+                        <button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mi Local
+                        </button>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="flex-1 p-10 bg-white">
+        <h2 class="text-2xl font-bold text-[#FF1493] text-center mb-4">Mis Datos</h2>
+
+        <!-- Mis Datos -->
+        <div class="h-screen p-6 mb-10">
+
+            <img src="https://via.placeholder.com/150" alt="Foto de perfil"
+                class="rounded-full mx-auto w-32 h-32 object-cover">
+
+            <div class="py-5">
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Nombre</label>
+                    <div>
+                        <h3>Jane Doe</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Rut</label>
+                    <div>
+                        <h3>12.345.678-9</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Contacto</label>
+                    <div>
+                        <h3>+569 1234 5678</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Correo</label>
+                    <div>
+                        <h3>jane.doe@mail.com</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="salon" class="block mb-2 text-lg font-semibold text-gray-700">Contraseña</label>
+                    <div>
+                        <h3>********</h3>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="flex justify-start">
+                <button type="submit"
+                    class="bg-[#0057FF] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                    Editar
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

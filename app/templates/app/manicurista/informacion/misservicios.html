@@ -1,0 +1,87 @@
+{% extends 'app/manicurista/baseManicurista.html' %}
+{% load static %}
+{% block contenido %}
+<div class="flex min-h-screen bg-gray-100">
+    <!-- Panel Izquierdo -->
+    <div class="w-1/4 bg-[#DE98B1] shadow-lg">
+        <nav class="py-8">
+            <ul>
+
+                <!-- Botones de las secciones -->
+                <li class="mb-6 text-center ">
+                    <a href="{% url 'misdatos' %}"><button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mis Datos
+                        </button>
+                    </a>
+                    <a href="{% url 'misservicios' %}">
+                        <button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mis Servicios
+                        </button>
+                    </a>
+                    <a href="{% url 'milocal' %}">
+                        <button
+                            class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                            Mi Local
+                        </button>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="flex-1 p-10">
+        <!-- Mis Servicios -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-10">
+            <h2 class="text-2xl font-bold text-[#FF1493] mb-4">Mis Servicios</h2>
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+                <thead class="bg-[#FFC0CB]">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Tipo</th>
+                        <th class="px-4 py-2 text-left">Duración</th>
+                        <th class="px-4 py-2 text-left">Valor</th>
+                        <th class="px-4 py-2 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="px-4 py-2">Polygel</td>
+                        <td class="px-4 py-2">120 min</td>
+                        <td class="px-4 py-2">$50.000</td>
+                        <td class="px-4 py-2 text-center">
+                            <button
+                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</button>
+                            <button
+                                class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</button>
+                            <button
+                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Deshabilitar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">Gel</td>
+                        <td class="px-4 py-2">60 min</td>
+                        <td class="px-4 py-2">$30.000</td>
+                        <td class="px-4 py-2 text-center">
+                            <button
+                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</button>
+                            <button
+                                class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</button>
+                            <button
+                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Deshabilitar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="flex justify-end mt-4">
+                <button
+                    class="bg-[#FF1493] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                    Agregar nuevo servicio
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}
