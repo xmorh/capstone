@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, nosotros, trabajaconnosotros, login, registrotrabajador, infoprofesional, registroexitosom, reservasdia, reservamensual, detallereserva, misservicios, misdatos, milocal
+from .views import *
 
 urlpatterns = [
     path('', home, name='home'),
@@ -15,4 +15,7 @@ urlpatterns = [
     path('misservicios', misservicios, name='misservicios'),
     path('misdatos', misdatos, name='misdatos'),
     path('milocal', milocal, name='milocal'),
+    path('reservas', reservas, name='reservas'),
+    path('detalle', detalle, name='detalle'),
+    path('user', user, name='user')
 ]

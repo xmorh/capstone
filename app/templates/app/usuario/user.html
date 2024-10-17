@@ -1,0 +1,61 @@
+{% extends 'app/usuario/baseusuario.html' %}
+{% load static %}
+{% block contenido %}
+<div class="flex min-h-screen bg-gray-100">
+
+
+    <div class="flex-1 px-10 bg-white">
+        <h2 class="text-2xl font-bold text-black text-center my-10">Mis Datos</h2>
+
+        <!-- Mis Datos -->
+        <div class="h-screen px-6">
+
+            <img src="{% static 'img/manicurista3.jpg' %}" alt="Foto de perfil"
+                class="rounded-full mx-auto w-40 h-40 object-cover">
+
+            <div class="py-5">
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Nombre</label>
+                    <div>
+                        <h3>Jane Doe</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Rut</label>
+                    <div>
+                        <h3>12.345.678-9</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Contacto</label>
+                    <div>
+                        <h3>+569 1234 5678</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 text-lg font-semibold text-gray-700">Correo</label>
+                    <div>
+                        <h3>jane.doe@mail.com</h3>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="salon" class="block mb-2 text-lg font-semibold text-gray-700">Contraseña</label>
+                    <div>
+                        <h3>********</h3>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="flex justify-start">
+                <button type="submit"
+                    class="bg-[#0057FF] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                    Editar
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

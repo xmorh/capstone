@@ -39,3 +39,12 @@ def misdatos(request):
 
 def misservicios(request):
     return render(request, 'app/manicurista/informacion/misservicios.html')
+
+def reservas(request):
+    return render(request, 'app/usuario/reservas.html')
+
+def detalle(request):
+    return render(request, 'app/usuario/detalle.html')
+
+def user(request):
+    return render(request, 'app/usuario/user.html')
