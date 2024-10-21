@@ -4,28 +4,36 @@
 <div class="flex items-center justify-center ">
     <div class="container mx-auto py-48 px-6 bg-white rounded-lg shadow-lg max-w-lg">
         <div class="flex justify-center mb-6">
-        <img src="{% static 'img/logo2.png' %}" alt="Logo" class="w-24 h-24 rounded-full border-4 border-white" style="background-color: black;">
+            <img src="{% static 'img/logo2.png' %}" alt="Logo" class="w-24 h-24 rounded-full border-4 border-white"
+                style="background-color: black;">
         </div>
-        
+
 
         <h2 class="text-3xl font-bold text-center mb-6 text-black">Iniciar Sesión</h2>
         <p class="text-lg text-gray-700 text-center mb-10">
             Ingresa tus credenciales para acceder a tu cuenta.
         </p>
-        
-        <form>
+
+        <form action="" method="post">
+            {% csrf_token %}
             <div class="mb-6">
                 <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Usuario</label>
-                <input type="text" id="username" name="username" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]" placeholder="Ingresa tu usuario" required>
+                <input type="text" id="username" name="username"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                    placeholder="Ingresa tu usuario" required>
             </div>
 
             <div class="mb-6">
                 <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]" placeholder="Ingresa tu contraseña" required>
+                <input type="password" id="password" name="password"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                    placeholder="Ingresa tu contraseña" required>
             </div>
 
             <!-- Botón de Iniciar Sesión -->
-            <button type="submit" class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300">Iniciar Sesión</button>
+            <button type="submit"
+                class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300">Iniciar
+                Sesión</button>
         </form>
     </div>
 </div>
