@@ -15,23 +15,61 @@
     <!-- Header -->
     <header class="bg-black text-[#DE98B1] py-4">
         <div class="container mx-auto flex justify-between items-center">
-            <!-- Logo -->
             <div class="flex items-center space-x-4">
                 <a href="{% url 'home' %}">
                     <img src="{% static 'img/logo.png' %}" alt="NailTime Logo" class="w-12 h-12">
                 </a>
             </div>
-            <!-- Navigation Links -->
-            <nav class="space-x-8">
-                <!-- <a href="#" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis reservas</a> -->
-                <a href="{% url 'nosotros'%}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Quiénes somos</a>
-                <a href="{% url 'trabajaconnosotros' %}"
-                    class="text-[#DE98B1] font-semibold hover:text-pink-500">Trabaja con Nosotros</a>
+            <nav class="flex-1">
+
+                <ul class="flex justify-center items-center text-lg space-x-8">
+                    {% if user.is_authenticated %}
+                        {% if is_manicurista %}
+                        <li>
+                            <a href="{% url 'reservasdia' %}"
+                                class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del Día</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'reservamensual' %}"
+                                class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del Mes</a>
+                        </li>
+                        {% elif is_cliente %}
+                        <li>
+                            <a href="{% url 'misreservas' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis
+                                Reservas</a>
+                        </li>
+                        <!-- <li>
+                            <a href="{% url 'nosotros' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Quiénes
+                                somos</a>
+                        </li> -->
+                        {% endif %}
+                    {% else %}
+                    <li>
+                        <a href="{% url 'nosotros' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Quiénes
+                            somos</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trabajaconnosotros' %}"
+                            class="text-[#DE98B1] font-semibold hover:text-pink-500">Trabaja con Nosotros</a>
+                    </li>
+                    {% endif %}
+                </ul>
             </nav>
-            <!-- Profile Icon -->
-            <a href="{% url 'login' %}">
-                <img src="{% static 'img/login.png' %}" alt="Perfil" class="w-10 h-10 rounded-full">
-            </a>
+            <!--  -->
+            <div class="flex items-center">
+                {% if user.is_authenticated %}
+                <h1 class="flex items-center justify-center text-[#DE98B1] font-semibold mr-4">Bienvenido
+                    {{user.username}}</h1>
+
+                <a href="{% url 'logout' %}">
+                    <img src="{% static 'img/logout.png' %}" alt="Cerrar sesión" class="w-9 h-9 rounded-full">
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}">
+                    <img src="{% static 'img/login.png' %}" alt="Iniciar sesión" class="w-10 h-10 rounded-full">
+                </a>
+                {% endif %}
+            </div>
         </div>
     </header>
     <div id="contenido">

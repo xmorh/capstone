@@ -1,4 +1,4 @@
-{% extends 'app/manicurista/baseManicurista.html' %}
+{% extends 'app/base.html' %}
 {% load static %}
 {% block contenido %}
 <div class="flex min-h-screen bg-gray-100">
@@ -6,8 +6,6 @@
     <div class="w-1/4 bg-[#DE98B1] shadow-lg">
         <nav class="py-8">
             <ul>
-
-                <!-- Botones de las secciones -->
                 <li class="mb-6 text-center ">
                     <a href="{% url 'misdatos' %}"><button
                             class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
@@ -32,7 +30,6 @@
     </div>
 
     <div class="flex-1 p-10">
-        <!-- Mis Servicios -->
         <div class="bg-white shadow-lg rounded-lg p-6 mb-10">
             <h2 class="text-2xl font-bold text-[#FF1493] mb-4">Mis Servicios</h2>
             <table class="min-w-full bg-white border border-gray-300 rounded-lg">
@@ -51,11 +48,11 @@
                         <td class="px-4 py-2">$50.000</td>
                         <td class="px-4 py-2 text-center">
                             <button
-                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</button>
+                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Deshabilitar</button>
                             <button
                                 class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</button>
                             <button
-                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Deshabilitar</button>
+                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Habilitar</button>
                         </td>
                     </tr>
                     <tr>
@@ -64,11 +61,11 @@
                         <td class="px-4 py-2">$30.000</td>
                         <td class="px-4 py-2 text-center">
                             <button
-                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</button>
+                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Deshabilitar</button>
                             <button
                                 class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</button>
                             <button
-                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Deshabilitar</button>
+                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Habilitar</button>
                         </td>
                     </tr>
                 </tbody>

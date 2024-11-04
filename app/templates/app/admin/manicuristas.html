@@ -1,0 +1,46 @@
+{% extends 'app/base.html' %}
+{% load static%}
+{% block contenido %}
+<div class="h-screen">
+    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Manicuristas</h2>
+    <div class="flex items-center justify-center w-full py-10">
+        <div class="p-6">
+
+            <!-- Tabla de Reservas -->
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-[#DE98B1] text-black">
+                        <th class="py-3 px-4 text-center">Nombre Completo</th>
+                        <th class="py-3 px-4 text-center">Correo Electrónico</th>
+                        <th class="py-3 px-4 text-center">Contraseña</th>
+                        <th class="py-3 px-4 text-center">Run</th>
+                        <th class="py-3 px-4 text-center">Foto de Perfil</th>
+                        <th class="py-3 px-4 text-center">Certificaciones</th>
+                        <th class="py-3 px-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-transparent text-black">
+                        <td class="py-3 px-4 text-center">dadas</td>
+                        <td class="py-3 px-4 text-center">dasda</td>
+                        <td class="py-3 px-4 text-center">asdasd</td>
+                        <td class="py-3 px-4 text-center">asdasd</td>
+                        <td class="py-3 px-4 text-center">fp</td>
+                        <td class="py-3 px-4 text-center">c</td>
+                        <td class="py-3 px-4 text-center">
+                            <button
+                                class="bg-[#0057FF] text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                                Aceptar
+                            </button>
+                            <button
+                                class="bg-[#DA0000] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
+                                Denegar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock%}
