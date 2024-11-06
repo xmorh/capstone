@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -53,14 +54,12 @@ class Tipo_servicio(models.Model):
     def __str__(self):
         return self.id_tipo_servicio
     
-# class Administrador(models.Model):
-#     id_administrador = models.AutoField(primary_key=True)
-#     run_administrador = models.CharField(max_length=15)
-#     nombre_administrador = models.CharField(max_length=100)
-#     email_administrador = models.CharField(max_length=100)
-#     password_administrador = models.CharField(max_length=100)
-#     telefono_administrador= models.IntegerField()
+class Manicurista(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    rut = models.CharField(max_length=20)
+    profile_picture = models.ImageField(upload_to='profile_pictures/')
+    certifications = models.FileField(upload_to='certifications/')
 
-#     def __str__(self):
-#         return self.run_administrador
+
 

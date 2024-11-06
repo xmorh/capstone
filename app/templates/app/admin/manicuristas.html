@@ -1,46 +1,42 @@
 {% extends 'app/base.html' %}
-{% load static%}
 {% block contenido %}
-<div class="h-screen">
-    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Manicuristas</h2>
-    <div class="flex items-center justify-center w-full py-10">
-        <div class="p-6">
-
-            <!-- Tabla de Reservas -->
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-[#DE98B1] text-black">
-                        <th class="py-3 px-4 text-center">Nombre Completo</th>
-                        <th class="py-3 px-4 text-center">Correo Electrónico</th>
-                        <th class="py-3 px-4 text-center">Contraseña</th>
-                        <th class="py-3 px-4 text-center">Run</th>
-                        <th class="py-3 px-4 text-center">Foto de Perfil</th>
-                        <th class="py-3 px-4 text-center">Certificaciones</th>
-                        <th class="py-3 px-4 text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="bg-transparent text-black">
-                        <td class="py-3 px-4 text-center">dadas</td>
-                        <td class="py-3 px-4 text-center">dasda</td>
-                        <td class="py-3 px-4 text-center">asdasd</td>
-                        <td class="py-3 px-4 text-center">asdasd</td>
-                        <td class="py-3 px-4 text-center">fp</td>
-                        <td class="py-3 px-4 text-center">c</td>
-                        <td class="py-3 px-4 text-center">
-                            <button
-                                class="bg-[#0057FF] text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
-                                Aceptar
-                            </button>
-                            <button
-                                class="bg-[#DA0000] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
-                                Denegar
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="container mx-auto py-10 h-screen">
+    <h2 class="text-2xl font-bold text-center mb-6">Lista de Manicuristas</h2>
+    <table class="w-full table-auto border border-gray-300">
+        <thead>
+            <tr class="bg-[#DE98B1]">
+                <th class="px-4 py-2">Nombre Completo</th>
+                <th class="px-4 py-2">Nombre de Usuario</th>
+                <th class="px-4 py-2">Correo Electrónico</th>
+                <th class="px-4 py-2">RUT</th>
+                <th class="px-4 py-2">Foto de Perfil</th>
+                <th class="px-4 py-2">Certificación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for manicurista in manicuristas %}
+            <tr class="text-center">
+                <td class="border px-4 py-2">{{ manicurista.manicurista.name }}</td>
+                <td class="border px-4 py-2">{{ manicurista.username }}</td>
+                <td class="border px-4 py-2">{{ manicurista.email }}</td>
+                <td class="border px-4 py-2">{{ manicurista.manicurista.rut }}</td>
+                <td class="border px-4 py-2">
+                    {% if manicurista.manicurista.profile_picture %}
+                        <img src="{{ manicurista.manicurista.profile_picture.url }}" alt="Foto de Perfil" class="w-12 h-12 rounded-full mx-auto">
+                    {% else %}
+                        Sin foto
+                    {% endif %}
+                </td>
+                <td class="border px-4 py-2">
+                    {% if manicurista.manicurista.certifications %}
+                        <a href="{{ manicurista.manicurista.certifications.url }}" target="_blank" class="text-blue-500 underline">Ver Certificación</a>
+                    {% else %}
+                        Sin certificación
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-{% endblock%}
+{% endblock %}
