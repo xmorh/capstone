@@ -3,7 +3,6 @@ from django.conf.urls.static import static
 from django.conf import settings
 from .views import *
 
-# handler403 = 'app.views.permission_denied_view'
 
 urlpatterns = [
     path('', home, name='home'),
@@ -13,7 +12,13 @@ urlpatterns = [
     path('registroexitosom', registroexitosom, name='registroexitosom'),
     path('registro', registro, name='registro'),
     path('reservasdia', reservasdia, name='reservasdia'),
+    # 
     path('manicuristas', manicuristas, name='manicuristas'),
+    path('panel/aprobar-manicurista/<int:manicurista_id>/', aprobar_manicurista, name='aprobar_manicurista'),
+    path('rechazar-manicurista/<int:manicurista_id>/', rechazar_manicurista, name='rechazar_manicurista'),
+    path('espera_aprobacion', espera_aprobacion, name='espera_aprobacion'),
+    path('actualizar_certificacion/', actualizar_certificacion, name='actualizar_certificacion'),
+    # 
     path('servicios', servicios, name='servicios'),
     path('reservamensual', reservamensual, name='reservamensual'), 
     path('detallereserva', detallereserva, name='detallereserva'), 
@@ -24,7 +29,12 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('misreservas/', misreservas, name='misreservas'),
-
+    path('modificar/<id_servicio>/', modificar, name='modificar'),
+    path('eliminar/<id_servicio>/', eliminar, name='eliminar'), 
+    path('agregarserv', agregarserv, name='agregarserv'),
+    path('eliminarserv/<id_tipo_servicio>/', eliminarserv, name='eliminarserv'), 
+    path('modificarserv/<id_tipo_servicio>/', modificarserv, name='modificarserv'),
+    
 ]
 
 if settings.DEBUG:

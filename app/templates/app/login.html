@@ -10,9 +10,23 @@
 
 
         <h2 class="text-3xl font-bold text-center mb-6 text-black">Iniciar Sesión</h2>
-        <p class="text-lg text-gray-700 text-center mb-10">
+        <p class="text-lg text-gray-700 text-center mb-8">
             Ingresa tus credenciales para acceder a tu cuenta.
         </p>
+
+
+        {% if messages %}
+        <div class="">
+            <div class="alert-messages flex justify-center items-center bg-red-200 rounded-lg shadow-lg my-8 h-10">
+                {% for message in messages %}
+                <div class="alert {{ message.tags }} font-semibold">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
 
         <form action="" method="post">
             {% csrf_token %}
@@ -23,21 +37,19 @@
                     placeholder="Ingresa tu usuario" required>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-6 relative">
                 <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Contraseña</label>
-                <input type="password" id="password" name="password"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                    placeholder="Ingresa tu contraseña" required>
+                <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]" placeholder="Ingresa tu contraseña" required>
+                
             </div>
 
-            <!-- Botón de Iniciar Sesión -->
             <button type="submit"
                 class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300">Iniciar
                 Sesión</button>
         </form>
 
         <p class="text-center text-gray-700 mt-6">
-            ¿No tienes una cuenta? 
+            ¿No tienes una cuenta?
             <a href="{% url 'registro' %}" class="text-[#FF1493] font-semibold hover:underline">
                 Regístrate aquí
             </a>

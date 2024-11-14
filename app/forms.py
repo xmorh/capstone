@@ -1,7 +1,8 @@
 # en tu_app/forms.py
 from django import forms
 from django.contrib.auth.models import User, Group
-# from .models import CustomUser
+from django.contrib.auth import get_user_model
+from .models import Manicurista, Servicio, TipoServicio
 
 class RegistroClienteForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
@@ -29,21 +30,61 @@ class RegistroClienteForm(forms.ModelForm):
             user.groups.add(cliente_group)
 
         return user
-    
+User = get_user_model()
+
 class RegistroManicuristaForm(forms.ModelForm):
     name = forms.CharField(max_length=255, required=True)
     rut = forms.CharField(max_length=20, required=True)
     profile_picture = forms.ImageField(required=True)
     certifications = forms.FileField(required=True)
-
+    
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'name', 'rut', 'profile_picture', 'certifications']
+        fields = ['username', 'email', 'password']  # Solo campos del modelo User
         widgets = {
             'password': forms.PasswordInput(),
         }
-    
+
     def save(self, commit=True):
+        # Crear el usuario
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password'])
-        return user 
+        
+        if commit:
+            user.save()
+            # Crear el perfil de Manicurista relacionado con el usuario
+            Manicurista.objects.create(
+                user=user,
+                name=self.cleaned_data['name'],
+                rut=self.cleaned_data['rut'],
+                profile_picture=self.cleaned_data['profile_picture'],
+                certifications=self.cleaned_data['certifications'],
+                state=False  # Inicia como no aprobado
+            )
+        return user
+
+    # 
+
+class ServicioForm(forms.ModelForm):
+    OPCIONES_DURACION = [(x, f"{x} hora" + ("s" if x > 1 else "")) for x in range(1, 11)]
+    duracion = forms.ChoiceField(choices=OPCIONES_DURACION)
+
+    class Meta:
+        model = Servicio
+        fields = ['tipo_servicio', 'valor',]
+
+class TipoServicioForm(forms.ModelForm):
+    class Meta:
+        model = TipoServicio
+        fields = '__all__'
+
+# class ManicuristaForm(forms.ModelForm):
+#     class Meta:
+#         model = Manicurista
+#         fields = '__all__'
+
+
+class ActualizarCertificacionForm(forms.ModelForm):
+    class Meta:
+        model = Manicurista
+        fields = ['certifications'] 

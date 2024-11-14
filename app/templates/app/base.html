@@ -36,8 +36,8 @@
                         <li>
                             <a href="{% url 'misreservas' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis
                                 Reservas</a>
-                        </li>
-                        {% elif is_admin %}
+                            </li>
+                        {% elif is_admin or user.is_superuser %}
                         <li>
                             <a href="{% url 'manicuristas' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Manicuristas</a>
                         </li>
@@ -74,9 +74,9 @@
             </div>
         </div>
     </header>
-    <div id="contenido">
+    <div id="contenido" class="">
         {% block contenido %}
-        {%endblock%}
+        {% endblock %}
     </div>
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8">

@@ -11,32 +11,49 @@
                 <th class="px-4 py-2">RUT</th>
                 <th class="px-4 py-2">Foto de Perfil</th>
                 <th class="px-4 py-2">Certificación</th>
+                <!-- <th class="px-4 py-2">Estado</th> -->
+                <th class="px-4 py-2">Acción</th>
             </tr>
         </thead>
         <tbody>
             {% for manicurista in manicuristas %}
             <tr class="text-center">
-                <td class="border px-4 py-2">{{ manicurista.manicurista.name }}</td>
-                <td class="border px-4 py-2">{{ manicurista.username }}</td>
-                <td class="border px-4 py-2">{{ manicurista.email }}</td>
-                <td class="border px-4 py-2">{{ manicurista.manicurista.rut }}</td>
+                <td class="border px-4 py-2">{{ manicurista.name }}</td>
+                <td class="border px-4 py-2">{{ manicurista.user.username }}</td>
+                <td class="border px-4 py-2">{{ manicurista.user.email }}</td>
+                <td class="border px-4 py-2">{{ manicurista.rut }}</td>
                 <td class="border px-4 py-2">
-                    {% if manicurista.manicurista.profile_picture %}
-                        <img src="{{ manicurista.manicurista.profile_picture.url }}" alt="Foto de Perfil" class="w-12 h-12 rounded-full mx-auto">
+                    {% if manicurista.profile_picture %}
+                        <img src="{{ manicurista.profile_picture.url }}" alt="Foto de Perfil" class="w-12 h-12 rounded-full mx-auto">
                     {% else %}
                         Sin foto
                     {% endif %}
                 </td>
                 <td class="border px-4 py-2">
-                    {% if manicurista.manicurista.certifications %}
-                        <a href="{{ manicurista.manicurista.certifications.url }}" target="_blank" class="text-blue-500 underline">Ver Certificación</a>
+                    {% if manicurista.certifications %}
+                        <a href="{{ manicurista.certifications.url }}" target="_blank" class="text-blue-500 underline">Ver Certificación</a>
                     {% else %}
                         Sin certificación
                     {% endif %}
                 </td>
+                <!-- <td class="border px-4 py-2">
+                    {% if manicurista.state %}
+                        Aprobado
+                    {% else %}
+                        Rechazado
+                    {% endif %}
+                </td> -->
+                <td>
+                    {% if not manicurista.state %}
+                        <a href="{% url 'aprobar_manicurista' manicurista.id %}" class="text-green-500">Aceptar</a> |
+                    {% endif %}
+                    <a href="{% url 'rechazar_manicurista' manicurista.id %}" class="text-red-500">Rechazar</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
+        
     </table>
 </div>
 {% endblock %}
+

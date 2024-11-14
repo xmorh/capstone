@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %}
+{% block contenido %}
+<div class="w-full h-screen bg-gray-100 flex items-center justify-center">
+    <div class="container mx-auto py-20 px-6 bg-white rounded-lg shadow-lg w-full ">
+
+        {% if ya_rechazado %}
+            <h1 class="text-3xl font-bold mb-12 text-red-500 text-center">Manicurista Rechazado</h1>
+            <p class="text-gray-700 text-center font-semibold">{{ mensaje_error }}</p>
+            <div class="text-center mt-14">
+                <a href="{% url 'manicuristas' %}"
+                    class="inline-block text-white font-semibold py-3 px-6 rounded-lg bg-[#FF1493] hover:bg-pink-500 transition duration-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Volver a la lista de manicuristas
+                </a>
+            </div>
+        {% else %}
+            <h1 class="text-3xl font-bold mb-12 text-[#FF1493] text-center">Rechazar Manicurista</h1>
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="motivo_rechazo" class="block text-sm font-medium text-gray-700">Motivo de rechazo:</label>
+                    <textarea id="motivo_rechazo" name="motivo_rechazo" required
+                        class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 resize-none"
+                        placeholder="Escribe el motivo del rechazo..." rows="5"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full text-white font-semibold py-3 rounded-lg transition duration-300 bg-red-600 hover:bg-red-700 px-4 shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                    Rechazar Manicurista
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

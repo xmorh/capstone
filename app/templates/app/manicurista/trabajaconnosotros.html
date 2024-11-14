@@ -32,11 +32,19 @@
                 placeholder="Ingresa tu correo electrónico" required>
         </div>
 
-        <div class="mb-6">
+        <div class="mb-6 relative">
             <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Contraseña</label>
-            <input type="password" id="password" name="password"
-                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                placeholder="Crea una contraseña" required>
+            <div class="relative">
+                <input type="password" id="password" name="password"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                       placeholder="Crea una contraseña" required>
+                <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-3 flex items-center">
+                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <div class="mb-6">
@@ -83,6 +91,25 @@
                 profilePreview.classList.remove('hidden');
             };
             reader.readAsDataURL(file);
+        }
+    }
+
+    function togglePassword() {
+        const passwordField = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            eyeIcon.innerHTML = `
+                <path d="M17.94 17.94a10.31 10.31 0 0 1-5.94 1.66C7.33 19.6 3 12 3 12s4.33-7.6 9-7.6a10.31 10.31 0 0 1 5.94 1.66" />
+                <path d="M1 1l22 22" />
+            `;
+        } else {
+            passwordField.type = 'password';
+            eyeIcon.innerHTML = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                <circle cx="12" cy="12" r="3" />
+            `;
         }
     }
 </script>

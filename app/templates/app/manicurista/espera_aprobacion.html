@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block contenido %}
+
+{% if motivo_rechazo %}
+<div class="w-full h-screen flex items-center justify-center bg-cover bg-center"
+    style="background-image: url('{% static 'img/rechazo.jpg' %}');">
+    <div class="container mx-96 bg-white bg-opacity-85 rounded-lg shadow-lg p-8 text-center">
+        <h2 class="text-3xl font-bold mb-6 text-[#FF1493]">Solicitud Rechazada</h2>
+        <p><strong>Motivo de rechazo:</strong> {{ motivo_rechazo }}</p>
+        <a href="{% url 'actualizar_certificacion' %}" class="mt-6 inline-block px-6 py-3 bg-[#FF1493] text-white font-semibold rounded-lg shadow hover:bg-pink-600 transition duration-300">
+            Actualizar Certificación
+        </a>
+    </div>
+</div>
+{% else %}
+<div class="w-full h-screen flex items-center justify-center bg-cover bg-center"
+    style="background-image: url('{% static 'img/espera.jpg' %}');">
+    <div class="p-8 mt-32 text-center bg-white bg-opacity-75 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold mb-6 text-[#FF1493]">Solicitud en Proceso</h2>
+        <p class="text-lg text-gray-700 mb-10">
+            Tu solicitud para convertirte en manicurista se encuentra en revisión. Te pedimos que intentes nuevamente
+            más tarde.
+        </p>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
