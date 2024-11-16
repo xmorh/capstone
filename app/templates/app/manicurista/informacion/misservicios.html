@@ -1,11 +1,16 @@
 {% extends 'app/base.html' %}
 {% load static %}
 {% block contenido %}
+{% load humanize %}
+{% load tailwind_filters %}
+
 <div class="flex min-h-screen bg-gray-100">
     <!-- Panel Izquierdo -->
-    <div class="w-1/4 bg-[#DE98B1] shadow-lg">
+    <div class="w-1/6 bg-[#DE98B1] shadow-lg">
         <nav class="py-8">
             <ul>
+
+                <!-- Botones de las secciones -->
                 <li class="mb-6 text-center ">
                     <a href="{% url 'misdatos' %}"><button
                             class="w-full text-black font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
@@ -30,8 +35,9 @@
     </div>
 
     <div class="flex-1 p-10">
+        <!-- Mis Servicios -->
         <div class="bg-white shadow-lg rounded-lg p-6 mb-10">
-            <h2 class="text-2xl font-bold text-[#FF1493] mb-4">Mis Servicios</h2>
+            <center><h2 class="text-2xl font-bold text-[#020617] mb-4">Mis Servicios</h2></center>
             <table class="min-w-full bg-white border border-gray-300 rounded-lg">
                 <thead class="bg-[#FFC0CB]">
                     <tr>
@@ -42,42 +48,41 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for s in servicio %}
                     <tr>
-                        <td class="px-4 py-2">Polygel</td>
-                        <td class="px-4 py-2">120 min</td>
-                        <td class="px-4 py-2">$50.000</td>
+                        <td class="px-4 py-2"> {{ s.tipo_servicio.nombre | title }} </td>
+                        <td class="px-4 py-2"> {{ s.tipo_servicio.duracion }} minutos </td>
+                        <td class="px-4 py-2"> ${{ s.valor | intcomma }} </td>
                         <td class="px-4 py-2 text-center">
-                            <button
-                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Deshabilitar</button>
-                            <button
-                                class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</button>
-                            <button
-                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Habilitar</button>
-                        </td>
+                            <a href="{% url 'eliminar' s.id_servicio %}"
+                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</a>
+                            <a href="{% url 'modificar' s.id_servicio %}"
+                                class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</a>
+                            </td>
+                        
                     </tr>
-                    <tr>
-                        <td class="px-4 py-2">Gel</td>
-                        <td class="px-4 py-2">60 min</td>
-                        <td class="px-4 py-2">$30.000</td>
-                        <td class="px-4 py-2 text-center">
-                            <button
-                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Deshabilitar</button>
-                            <button
-                                class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</button>
-                            <button
-                                class="bg-blue-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-blue-600">Habilitar</button>
-                        </td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
-            <div class="flex justify-end mt-4">
-                <button
-                    class="bg-[#FF1493] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
-                    Agregar nuevo servicio
-                </button>
-            </div>
+            {% comment %} <div class="flex justify-end mt-4">
+                <a href="{% url 'agregar' %}" class="bg-[#FF1493] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">Agregar nuevo servicio</a>
+            </div> {% endcomment %}
         </div>
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-10">
 
+            <h2 class="text-3xl font-bold text-center mb-6 text-[#020617]">Nuevo Servicio</h2>
+        
+            <form action="" method="post" enctype="multipart/form-data">
+                
+                {% csrf_token %}
+                {{ form | crispy }}
+                
+                <div class="d-flex justify-content-end">
+                    <input type="submit" value="Guardar" class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300">
+                </div>
+            </form>
+        
+        </div>
 
     </div>
 </div>
