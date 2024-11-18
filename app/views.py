@@ -54,7 +54,7 @@ def home(request):
         'servicio': servicio,
         'tiposervicio': tiposervicio
     }
-    return render(request, 'app/home.html',data)
+    return render(request, 'app/home.html', data)
 
 def nosotros(request):
     return render(request, 'app/nosotros.html')
@@ -130,21 +130,24 @@ def misdatos(request):
 # Servicios
 
 def misservicios(request):
-    # servicio = Servicio.objects.select_related('tipo_servicio').all()
-    # data = {
-    # 'form': ServicioForm(),
-    # 'servicio': servicio,
-    #  }
+    servicio = Servicio.objects.filter(manicurista=request.user).select_related('tipo_servicio')
 
-    # if request.method == 'POST':
-    #      formulario = ServicioForm(request.POST, files=request.FILES)
-    #      if formulario.is_valid():
-    #          formulario.save()
-    #          data["mensaje"] = "Guardado correctamente"
-    #      else:
-    #          data["form"] = formulario
+    data = {
+        'form': ServicioForm(),
+        'servicio': servicio,
+    }
 
-    return render(request, 'app/manicurista/informacion/misservicios.html')
+    if request.method == 'POST':
+        formulario = ServicioForm(request.POST, files=request.FILES)
+        if formulario.is_valid():
+            servicio = formulario.save(commit=False)
+            servicio.manicurista = request.user
+            servicio.save()
+            data["mensaje"] = "Guardado correctamente"
+        else:
+            data["form"] = formulario
+
+    return render(request, 'app/manicurista/informacion/misservicios.html', data)
 
 def modificar(request, id_servicio):
 
@@ -161,7 +164,7 @@ def modificar(request, id_servicio):
             return redirect(to="misservicios")
         data["form"] = formulario
 
-    return render(request, 'app/manicurista/servicios/modificar.html', data)
+    return render(request, 'app/manicurista/serv/modificar.html', data)
 
 def eliminar(request, id_servicio):
     servicio = get_object_or_404(Servicio, id_servicio=id_servicio)
@@ -200,7 +203,7 @@ def modificarserv(request, id_tipo_servicio):
         formulario = TipoServicioForm(data=request.POST, instance=tipo_servicio, files=request.FILES)
         if formulario.is_valid():
             formulario.save()
-            return redirect(to="adminserv")
+            return redirect(to="servicios")
         data["form"] = formulario
 
     return render(request, 'app/admin/crud/modificarserv.html', data)
@@ -294,6 +297,33 @@ def servicios(request):
 
     return render(request, 'app/admin/servicios.html', {'is_admin': is_admin, 'tipo_servicio' : tipo_servicio, 'data' : data})
 
+@login_required
+@group_required('manicurista') 
+def misservicios(request):
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            return redirect('espera_aprobacion')
+
+    servicio = Servicio.objects.filter(manicurista=manicurista).select_related('tipo_servicio')
+    data = {
+        'form': ServicioForm(),
+        'servicio': servicio,
+        'is_manicurista': is_manicurista,
+    }
+
+    if request.method == 'POST':
+        formulario = ServicioForm(request.POST, files=request.FILES)
+        if formulario.is_valid():
+            servicio = formulario.save(commit=False)
+            servicio.manicurista = manicurista
+            servicio.save()
+            data["mensaje"] = "Guardado correctamente"
+        else:
+            data["form"] = formulario
+
+    return render(request, 'app/manicurista/informacion/misservicios.html', data)
 
 # aprobación manicurista
 

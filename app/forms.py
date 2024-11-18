@@ -66,9 +66,6 @@ class RegistroManicuristaForm(forms.ModelForm):
     # 
 
 class ServicioForm(forms.ModelForm):
-    OPCIONES_DURACION = [(x, f"{x} hora" + ("s" if x > 1 else "")) for x in range(1, 11)]
-    duracion = forms.ChoiceField(choices=OPCIONES_DURACION)
-
     class Meta:
         model = Servicio
         fields = ['tipo_servicio', 'valor',]
