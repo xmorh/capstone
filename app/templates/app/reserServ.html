@@ -10,6 +10,7 @@
     <br><br>
     <title>Reserva de Servicio</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="{% static 'js/filtroServ.js' %}" defer></script>
 </head>
 <body class="bg-pink-100">
     <div class="container mx-auto w-3/4 px-5 mb-10">
@@ -25,13 +26,12 @@
                 <label for="servicio" class="block text-gray-700 text-sm font-bold mb-2">Selecciona un Servicio:</label>
                 <select id="servicio" name="servicio" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     {% for s in servicio %}
-                        <option value="{{ s.id_servicio }}">{{ s.tipo_servicio }}</option>
+                    <option value="{{ s.id_servicio }}" data-manicurista="{{ s.manicurista.id }}">{{ s.tipo_servicio }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="flex items-center justify-between">
-                {% comment %} <a href="{% url 'hacer_reserva' s.id_servicio %}" class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition">Reservar</a>
-                 {% endcomment %}
+                {% comment %} <a href="{% url 'hacer_reserva' s.id_servicio %}" class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition">Reservar</a> {% endcomment %}
         </div>
         </form>
     </div>
