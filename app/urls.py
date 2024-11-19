@@ -20,8 +20,6 @@ urlpatterns = [
     path('actualizar_certificacion/', actualizar_certificacion, name='actualizar_certificacion'),
     # 
     path('servicios', servicios, name='servicios'),
-    path('reservamensual', reservamensual, name='reservamensual'), 
-    path('detallereserva', detallereserva, name='detallereserva'), 
     path('infoprofesional', infoprofesional, name='infoprof'),
     path('misservicios', misservicios, name='misservicios'),
     path('misdatos', misdatos, name='misdatos'),
@@ -34,6 +32,14 @@ urlpatterns = [
     path('agregarserv', agregarserv, name='agregarserv'),
     path('eliminarserv/<id_tipo_servicio>/', eliminarserv, name='eliminarserv'), 
     path('modificarserv/<id_tipo_servicio>/', modificarserv, name='modificarserv'),
+    # 
+    path('reservamensual', reservamensual, name='reservamensual'), 
+    path('detallereserva', detallereserva, name='detallereserva'), 
+    # path('api/reservas/', api_reservas, name='api_reservas'),
+    path('api/reservas-falsas/', api_reservas_falsas, name='api_reservas_falsas'),
+    path('reservar/<int:servicio_id>/', hacer_reserva, name='hacer_reserva'),
+    path('reserva/<int:reserva_id>/', reserva_detalle, name='reserva_detalle'),
+    path('confirmar-reserva/<int:servicio_id>/', confirmar_reserva, name='confirmar_reserva'),
     
 ]
 

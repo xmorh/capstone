@@ -2,7 +2,17 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import get_user_model
-from .models import Manicurista, Servicio, TipoServicio
+from .models import Manicurista, Servicio, TipoServicio, Reserva
+
+
+class ReservaForm(forms.ModelForm):
+    class Meta:
+        model = Reserva
+        fields = ['fecha_hora']
+        widgets = {
+            'fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+
 
 class RegistroClienteForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")

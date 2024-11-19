@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.models import Manicurista, Servicio, TipoServicio
+from app.models import Manicurista, Servicio, TipoServicio, Reserva
 
 
 # Register your models here.
@@ -19,6 +19,7 @@ class TipoServicioAdmin(admin.ModelAdmin):
     list_filter = ('nombre',)
 
 
+admin.site.register(Reserva)
 admin.site.register(Manicurista)
 admin.site.register(Servicio, ServicioAdmin)
 admin.site.register(TipoServicio,TipoServicioAdmin)

@@ -1,4 +1,4 @@
-# from django.http import HttpResponseForbidden
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -6,8 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth.models import Group,User
-from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm
-from .models import Manicurista, TipoServicio, Servicio
+from django.core.exceptions import ValidationError
+# from datetime import datetime, timedelta
+from django.utils import timezone
+from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm, ReservaForm
+from .models import Manicurista, TipoServicio, Servicio, Reserva
 
 # Create your views here.
 
@@ -55,6 +58,8 @@ def home(request):
         'tiposervicio': tiposervicio
     }
     return render(request, 'app/home.html', data)
+
+
 
 def nosotros(request):
     return render(request, 'app/nosotros.html')
@@ -104,19 +109,123 @@ def infoprofesional(request):
 
 def misreservas(request):
     return render(request, 'app/usuario/misreservas.html')
+# 
+
+# haceer reserva
+
+@login_required
+def hacer_reserva(request, servicio_id):
+    servicio = get_object_or_404(Servicio, id_servicio=servicio_id)
+    manicurista = servicio.manicurista
+    horas_disponibles = []  # Lista de horas disponibles para el manicurista
+    
+    # Obtén las horas disponibles (esto depende de la lógica que implementes para manejar la disponibilidad)
+    # Aquí hay un ejemplo básico de cómo podrías hacerlo. Suponiendo que el manicurista tiene un horario fijo:
+    current_time = timezone.now()
+    
+    # Asegúrate de que el manicurista tiene horas disponibles.
+    for i in range(8, 18):  # Ejemplo: 8 AM a 6 PM
+        horas_disponibles.append(current_time.replace(hour=i, minute=0, second=0, microsecond=0))
+    
+    if request.method == 'POST':
+        # Verificamos si el formulario contiene la hora seleccionada
+        if 'hora_reserva' in request.POST:
+            hora_reserva = request.POST.get('hora_reserva')
+            # Mostrar la página de confirmación con la hora seleccionada
+            return render(request, 'app/usuario/confirmar_reserva.html', {
+                'hora_reserva': hora_reserva,
+                'servicio': servicio,
+                'manicurista': manicurista
+            })
+        
+        # Si el usuario confirma la reserva, la guardamos en la base de datos
+        if 'confirmar_reserva' in request.POST:
+            hora_reserva = request.POST.get('hora_reserva')
+            reserva = Reserva.objects.create(
+                cliente=request.user,
+                servicio=servicio,
+                manicurista=manicurista,
+                fecha_hora=hora_reserva,  # Usamos la hora seleccionada
+                estado='pendiente',
+            )
+            return redirect('reserva_detalle', reserva_id=reserva.id)
+    
+    return render(request, 'app/reservar.html', {'servicio': servicio, 'horas_disponibles': horas_disponibles})
+
+
+def validar_disponibilidad(manicurista, fecha_hora):
+    reservas = Reserva.objects.filter(manicurista=manicurista, fecha_hora=fecha_hora)
+    if reservas.exists():
+        raise ValidationError("El manicurista ya tiene una reserva en ese horario.")
+
+def reserva_detalle(request, reserva_id):
+    reserva = get_object_or_404(Reserva, id=reserva_id)
+    return render(request, 'app/usuario/reserva_detalle.html', {'reserva': reserva})
+
+# def reservamensual(request):
+#     is_manicurista = request.user.groups.filter(name='manicurista').exists()
+#     if is_manicurista:
+#         manicurista = Manicurista.objects.filter(user=request.user).first()
+#         if manicurista and not manicurista.state:
+#             # Redirige si el manicurista no está aprobado
+#             return redirect('espera_aprobacion') 
+#     return render(request, 'app/manicurista/reservas/reservamensual.html',{
+#         'is_manicurista': is_manicurista,
+#     })
+
+# 
 
 def reservamensual(request):
     is_manicurista = request.user.groups.filter(name='manicurista').exists()
     if is_manicurista:
         manicurista = Manicurista.objects.filter(user=request.user).first()
         if manicurista and not manicurista.state:
-            # Redirige si el manicurista no está aprobado
-            return redirect('espera_aprobacion') 
-    return render(request, 'app/manicurista/reservas/reservamensual.html',{
+            return redirect('espera_aprobacion')
+
+    return render(request, 'app/manicurista/reservas/reservamensual.html', {
         'is_manicurista': is_manicurista,
     })
 
 
+
+# def api_reservas(request):
+#     # Simulación de reservas (en un futuro, reemplaza con datos reales de tu modelo)
+#     reservas = [
+#         {
+#             "title": "Reserva de ejemplo",
+#             "start": "2024-11-10",
+#             "url": "/detallereserva/"
+#         },
+#         {
+#             "title": "Otra reserva",
+#             "start": "2024-11-12",
+#             "url": "/detallereserva/"
+#         },
+#     ]
+#     return JsonResponse(reservas, safe=False)
+def api_reservas_falsas(request):
+    from datetime import datetime, timedelta
+
+    hoy = datetime.now()
+    reservas_falsas = []
+
+    for i in range(5):  # Crear 5 reservas
+        dia_reserva = hoy + timedelta(days=i * 3)  # Cada 3 días
+        reservas_falsas.append({
+            "title": f"Reserva Falsa {i + 1}",
+            "start": dia_reserva.strftime('%Y-%m-%d'),
+            "url": "/detallereserva/",  # Puedes ajustar esta URL
+            "className": "bg-[#DE98B1] text-white rounded-lg shadow-md hover:bg-[#C57897]"
+        })
+
+    return JsonResponse(reservas_falsas, safe=False)
+
+
+def confirmar_reserva(request, servicio_id):
+    # Lógica para manejar la confirmación
+    return render(request, 'app/usuario/confirmar_reserva.html', {'servicio_id': servicio_id})
+
+# 
 
 def detallereserva(request):
     return render(request, 'app/manicurista/reservas/detallereserva.html')
@@ -238,7 +347,7 @@ def login_view(request):
                 print(user.groups.all())
                 return redirect('reservasdia')
             elif user.groups.filter(name='cliente').exists():
-                return redirect('homecliente')
+                return redirect('home')
             elif user.groups.filter(name='admin').exists():
                 return redirect('manicuristas')
             else:
@@ -258,8 +367,28 @@ def logout_view(request):
 @group_required('cliente')
 def homecliente(request):
     is_cliente = request.user.groups.filter(name='cliente').exists()
-    return render(request, 'app/home.html', {
+
+    reservas = Reserva.objects.filter(cliente=request.user)
+    tiposervicio = TipoServicio.objects.all()
+    tipo_filtro = request.GET.get('tipo', None)
+    if tipo_filtro:
+        try:
+            tipo_servicio_obj = TipoServicio.objects.get(nombre=tipo_filtro)
+            servicio = Servicio.objects.filter(tipo_servicio=tipo_servicio_obj)
+        except TipoServicio.DoesNotExist:
+            servicio = Servicio.objects.none()  
+    else:
+        servicio = Servicio.objects.all()  
+
+    data = {
+        'servicio': servicio,
+        'tiposervicio': tiposervicio
+    }
+
+    return render(request, 'app/homecliente.html', {
         'is_cliente': is_cliente,
+        'reservas': reservas,
+        'data':data
     })
 
 

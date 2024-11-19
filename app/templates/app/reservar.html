@@ -1,0 +1,26 @@
+{% extends 'app/base.html' %}
+
+{% block contenido %}
+
+<div class="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div class="container max-w-2xl bg-white p-8 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-bold text-center text-[#FF1493] mb-6">Selecciona la Hora para tu Reserva</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="grid grid-cols-3 gap-4">
+                {% for hora in horas_disponibles %}
+                    <button 
+                        type="submit" 
+                        name="hora_reserva" 
+                        value="{{ hora|date:'Y-m-d H:i:s' }}" 
+                        class="bg-[#FF1493] text-white font-semibold py-3 px-4 rounded-lg hover:bg-pink-500 focus:ring-2 focus:ring-[#DE98B1] transition duration-300">
+                        {{ hora|date:"H:i" }}
+                    </button>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

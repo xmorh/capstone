@@ -3,6 +3,20 @@ from django.db import models
 
 # Create your models here.
 
+class Reserva(models.Model):
+    cliente = models.ForeignKey(User, on_delete=models.CASCADE)
+    servicio = models.ForeignKey('Servicio', on_delete=models.CASCADE)
+    manicurista = models.ForeignKey('Manicurista', on_delete=models.CASCADE, null=True, blank=True)  # Manicurista asignado
+    fecha_hora = models.DateTimeField()
+    estado = models.CharField(
+        max_length=20, 
+        choices=[('pendiente', 'Pendiente'), ('confirmada', 'Confirmada')], 
+        default='pendiente'
+    )
+    
+    def __str__(self):
+        return f"Reserva de {self.cliente} para {self.servicio} con {self.manicurista} el {self.fecha_hora}"
+
 class TipoServicio(models.Model):
     id_tipo_servicio = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)

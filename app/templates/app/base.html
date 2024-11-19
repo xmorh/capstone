@@ -8,6 +8,11 @@
     {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
+    
+    <!-- FullCalendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
 
 </head>
 
@@ -23,37 +28,39 @@
 
                 <ul class="flex justify-center items-center text-lg space-x-8">
                     {% if user.is_authenticated %}
-                        {% if is_manicurista %}
-                        <li>
-                            <a href="{% url 'reservasdia' %}"
-                                class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del Día</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'reservamensual' %}"
-                                class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del Mes</a>
-                        </li>
-                        {% elif is_cliente %}
-                        <li>
-                            <a href="{% url 'misreservas' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis
-                                Reservas</a>
-                            </li>
-                        {% elif is_admin or user.is_superuser %}
-                        <li>
-                            <a href="{% url 'manicuristas' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Manicuristas</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'servicios' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Servicios</a>
-                        </li>
-                        {% endif %}
+                    {% if is_manicurista %}
+                    <li>
+                        <a href="{% url 'reservasdia' %}"
+                            class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del Día</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'reservamensual' %}"
+                            class="text-[#DE98B1] font-semibold hover:text-pink-500">Reservas del Mes</a>
+                    </li>
+                    {% elif is_cliente %}
+                    <li>
+                        <a href="{% url 'misreservas' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis
+                            Reservas</a>
+                    </li>
+                    {% elif is_admin or user.is_superuser %}
+                    <li>
+                        <a href="{% url 'manicuristas' %}"
+                            class="text-[#DE98B1] font-semibold hover:text-pink-500">Manicuristas</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'servicios' %}"
+                            class="text-[#DE98B1] font-semibold hover:text-pink-500">Servicios</a>
+                    </li>
+                    {% endif %}
                     {% else %}
-                        <li>
-                            <a href="{% url 'nosotros' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Quiénes
-                                somos</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'trabajaconnosotros' %}"
-                                class="text-[#DE98B1] font-semibold hover:text-pink-500">Trabaja con Nosotros</a>
-                        </li>
+                    <li>
+                        <a href="{% url 'nosotros' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Quiénes
+                            somos</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'trabajaconnosotros' %}"
+                            class="text-[#DE98B1] font-semibold hover:text-pink-500">Trabaja con Nosotros</a>
+                    </li>
                     {% endif %}
                 </ul>
             </nav>

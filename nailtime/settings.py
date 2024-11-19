@@ -29,6 +29,9 @@ ALLOWED_HOSTS = []
 
 LOGIN_URL = 'login'
 
+# autofield 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # imagenes 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

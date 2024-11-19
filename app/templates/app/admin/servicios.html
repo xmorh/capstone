@@ -1,10 +1,10 @@
 {% extends 'app/base.html' %}
 {% load static %}
 {% block contenido %}
-<div class="h-screen">
-    <h2 class="text-3xl font-bold text-black text-center py-5">Administración de Servicios</h2>
-    <div class=" flex items-center justify-center py-10">
-        <div class=" w-full bg-white rounded-lg shadow-lg p-6">
+<div class="min-h-screen">
+    <h2 class="text-3xl font-bold text-black text-center pt-10">Administración de Servicios</h2>
+    <div class="flex items-center justify-center py-10">
+        <div class="w-full bg-white rounded-lg shadow-lg p-6">
 
             <table class="w-full text-left border-collapse border-gray-300">
                 <thead>
@@ -22,21 +22,30 @@
                         <td class="py-3 px-4"> {{ t.duracion }} </td>
                         <td class="py-3 px-4"> {{ t.descripcion }} </td>
                         <td class="py-3 px-4 text-center">
-                            <a href="{% url 'eliminarserv' t.id_tipo_servicio %}"
-                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</a>
-                                &nbsp;
-                            <a href="{% url 'modificarserv' t.id_tipo_servicio %}"
-                                class="bg-green-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-green-600">Editar</a>
+                            <div class="flex justify-center gap-3">
+                                <a href="{% url 'eliminarserv' t.id_tipo_servicio %}"
+                                    class="bg-red-500 text-white font-bold py-1 px-4 rounded-lg hover:bg-red-600 transition duration-200">
+                                    Eliminar
+                                </a>
+                                <a href="{% url 'modificarserv' t.id_tipo_servicio %}"
+                                    class="bg-green-500 text-white font-bold py-1 px-4 rounded-lg hover:bg-green-600 transition duration-200">
+                                    Editar
+                                </a>
+                            </div>
                         </td>
-
                     </tr>
                     {% endfor %}
-
                 </tbody>
             </table>
         </div>
     </div>
-    <center><a href="{% url 'agregarserv' %}" class="bg-[#FF1493] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">Agregar nuevo servicio</a> </center>
+
+    <div class="text-center">
+        <a href="{% url 'agregarserv' %}"
+            class="inline-block text-white font-semibold py-3 px-6 rounded-lg bg-[#FF1493] hover:bg-pink-500 transition duration-300 shadow">
+            Agregar nuevo servicio
+        </a>
+    </div>
 
 </div>
-{% endblock%}
+{% endblock %}

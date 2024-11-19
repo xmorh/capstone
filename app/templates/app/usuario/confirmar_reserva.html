@@ -1,0 +1,18 @@
+{% extends 'app/base.html' %}
+{% block contenido %}
+<div class="min-h-screen container mx-auto py-10 px-6 bg-white rounded-lg shadow-lg">
+    <h2 class="text-3xl font-bold text-center mb-8 text-[#FF1493]">Confirmar Reserva</h2>
+    <p class="text-lg text-gray-700 mb-4">
+        ¿Estás seguro de que deseas confirmar tu reserva para el servicio
+        <strong>{{ servicio.nombre }}</strong> con el manicurista <strong>{{ servicio.manicurista.user.username }}</strong>
+        el <strong>{{ fecha_hora }}</strong>?
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="bg-[#FF1493] text-white px-6 py-2 rounded-lg">
+            Confirmar Reserva
+        </button>
+        <a href="{% url 'homecliente' %}" class="ml-4 text-gray-700">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,55 +1,50 @@
 {% extends 'app/base.html' %}
-{% load static %}
 {% block contenido %}
-<div class="w-full h-screen ">
-    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Reservas del Mes</h2>
 
+<style>
+    .fc-button {
+        background-color: #DE98B1; /* Fondo rosa */
+        color: white; /* Texto blanco */
+        padding: 0.5rem 1rem; /* Espaciado interno */
+        border-radius: 0.375rem; /* Bordes redondeados */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+        transition: background-color 0.2s ease-in-out;
+    }
+    .fc-button:hover {
+        background-color: #C57897; /* Hover más oscuro */
+    }
+    .fc-toolbar-title {
+        color: #FF1493; /* Título rosa */
+        font-weight: bold;
+        font-size: 1.125rem; /* Tamaño de texto */
+    }
+</style>
+
+<div class="w-full h-screen">
+    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Reservas del Mes</h2>
     <div class="flex items-center justify-center py-10">
         <div class="max-w-5xl w-full bg-white rounded-lg shadow-lg p-6">
-
-            <div class="grid grid-cols-7 gap-4 text-center">
-                <div class="font-semibold text-gray-700">Lunes</div>
-                <div class="font-semibold text-gray-700">Martes</div>
-                <div class="font-semibold text-gray-700">Miércoles</div>
-                <div class="font-semibold text-gray-700">Jueves</div>
-                <div class="font-semibold text-gray-700">Viernes</div>
-                <div class="font-semibold text-gray-700">Sábado</div>
-                <div class="font-semibold text-gray-700">Domingo</div>
-
-                <!-- Días del mes (ejemplo para octubre) -->
-                <div class="py-4"></div> <!-- Empty cells for previous month's days -->
-                <div class="py-4"></div>
-                <div class="py-4"></div>
-                <div class="py-4"></div>
-                <div class="py-4"></div>
-                <div class="py-4"></div>
-
-                <!-- Días con y sin reservas -->
-                <div class="py-4">
-                    1
-                </div>
-                <div class="py-4">
-                    2
-                </div>
-                <div class="py-4 bg-[#DE98B1] bg-opacity-80 cursor-pointer rounded-lg">
-                    <a href="{% url 'detallereserva'%}" class="text-white">3</a>
-                </div>
-                <div class="py-4">
-                    4
-                </div>
-                <div class="py-4">
-                    5
-                </div>
-                <div class="py-4 bg-[#DE98B1] bg-opacity-80 cursor-pointer rounded-lg">
-                    <a href="{% url 'detallereserva'%}" class="text-white">6</a>
-                </div>
-                <div class="py-4">
-                    7
-                </div>
-
-                <!-- Continúa con el resto de los días... -->
-            </div>
+            <!-- Contenedor del Calendario -->
+            <div id="calendar" class="w-full h-[700px]"></div>
         </div>
     </div>
 </div>
-{% endblock%}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '/api/reservas-falsas/', // Ruta para eventos
+        });
+        calendar.render();
+    });
+</script>
+
+{% endblock %}
