@@ -234,8 +234,17 @@ def detallereserva(request):
 def milocal(request):
     return render(request, 'app/manicurista/informacion/milocal.html')
 
+@login_required
+@group_required('manicurista')
 def misdatos(request):
-    return render(request, 'app/manicurista/informacion/misdatos.html')
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            return redirect('espera_aprobacion')
+        
+    user = request.user
+    return render(request, 'app/manicurista/informacion/misdatos.html', {'user': user})
 
 # Servicios
 
