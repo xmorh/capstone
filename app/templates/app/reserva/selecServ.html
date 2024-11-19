@@ -1,0 +1,23 @@
+{% extends 'app/base.html' %}
+
+{% block contenido %}
+<h1>Reserva tu servicio con la manicurista</h1>
+<p>Fecha seleccionada: {{ fecha }}</p>
+
+<!-- Aquí puedes añadir el formulario para la reserva -->
+<form action="{% url 'manicurista/misservicios' %}" method="POST">
+    {% csrf_token %}
+    <!-- Agregar campos para seleccionar el servicio, hora, etc. -->
+    <label for="servicio">Selecciona el servicio:</label>
+    <select name="servicio" id="servicio">
+        <option value="manicure">Manicure</option>
+        <option value="pedicure">Pedicure</option>
+        <option value="nail_art">Arte de uñas</option>
+    </select>
+
+    <label for="hora">Selecciona la hora:</label>
+    <input type="time" name="hora" id="hora" required>
+
+    <button type="submit">Reservar</button>
+</form>
+{% endblock %}

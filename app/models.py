@@ -33,4 +33,12 @@ class Manicurista(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Reserva(models.Model):
+    id_reserva = models.AutoField(primary_key=True)
+    horario = models.DateField()
+    manicurista = models.ForeignKey('Manicurista', on_delete=models.PROTECT)
+    servicio = models.ForeignKey('Servicio', on_delete=models.PROTECT)
 
+    def __str__(self):
+        return str(self.id_reserva)

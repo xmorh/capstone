@@ -34,6 +34,8 @@ urlpatterns = [
     path('agregarserv', agregarserv, name='agregarserv'),
     path('eliminarserv/<id_tipo_servicio>/', eliminarserv, name='eliminarserv'), 
     path('modificarserv/<id_tipo_servicio>/', modificarserv, name='modificarserv'),
+    path('reservar/', ReservarView.as_view(), name='reservar_sin_fecha'),  # Ruta sin fecha
+    path('reservar/selecServ/<str:fecha>/', selecServ, name='selecServ'), 
     
 ]
 

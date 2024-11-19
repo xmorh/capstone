@@ -1,4 +1,5 @@
 # from django.http import HttpResponseForbidden
+import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -7,7 +8,9 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth.models import Group,User
 from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm
-from .models import Manicurista, TipoServicio, Servicio
+from .models import Manicurista, TipoServicio, Servicio, Reserva
+from django.views.generic import ListView
+
 
 # Create your views here.
 
@@ -410,3 +413,13 @@ def actualizar_certificacion(request):
     return render(request, 'app/manicurista/actualizar_certificacion.html', {
         'certificado_subido': None,
     })
+
+# Reserva
+class ReservarView(ListView):
+    model = Reserva
+    template_name = "app/reserva/reservar.html"
+
+def selecServ(request, fecha):
+    fecha_seleccionada = datetime.strptime(fecha, '%Y-%m-%d').date()
+
+    return render(request, 'app/reserva/selecServ.html', {'fecha': fecha_seleccionada})
