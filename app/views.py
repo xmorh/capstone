@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 # from datetime import datetime, timedelta
 from django.utils import timezone
 from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm, ReservaForm
+from django.views.generic import ListView
 from .models import Manicurista, TipoServicio, Servicio, Reserva
 
 # Create your views here.
@@ -388,7 +389,10 @@ def homecliente(request):
     return render(request, 'app/homecliente.html', {
         'is_cliente': is_cliente,
         'reservas': reservas,
-        'data':data
+        'servicio': servicio,
+        'tiposervicio': tiposervicio,
+        'tipo_filtro': tipo_filtro,
+        'data' : data
     })
 
 
@@ -539,3 +543,18 @@ def actualizar_certificacion(request):
     return render(request, 'app/manicurista/actualizar_certificacion.html', {
         'certificado_subido': None,
     })
+
+# Calendario
+class CalendarioView(ListView):
+    model = Reserva
+    template_name = "app/calendario.html"
+
+def reserServ (request):
+    manicurista = Manicurista.objects.all()  
+    servicio = Servicio.objects.all()
+
+    data = {
+        'manicurista': manicurista,
+        'servicio': servicio,
+    }
+    return render(request, 'app/reserServ.html', data)

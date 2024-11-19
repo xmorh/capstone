@@ -40,6 +40,8 @@ urlpatterns = [
     path('reservar/<int:servicio_id>/', hacer_reserva, name='hacer_reserva'),
     path('reserva/<int:reserva_id>/', reserva_detalle, name='reserva_detalle'),
     path('confirmar-reserva/<int:servicio_id>/', confirmar_reserva, name='confirmar_reserva'),
+    path('calendario/', CalendarioView.as_view(), name='calendario'),
+    path('reserServ/', reserServ, name='reserServ'),
     
 ]
 
