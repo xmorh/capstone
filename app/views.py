@@ -7,11 +7,13 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth.models import Group,User
 from django.core.exceptions import ValidationError
-# from datetime import datetime, timedelta
+from django.utils.dateparse import parse_datetime
 from django.utils import timezone
+from django.views import View
 from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm, ReservaForm
 from django.views.generic import ListView
-from .models import Manicurista, TipoServicio, Servicio, Reserva
+from .models import Manicurista, TipoServicio, Servicio, Reserva, Evento
+
 
 # Create your views here.
 
@@ -153,15 +155,73 @@ def hacer_reserva(request, servicio_id):
     
     return render(request, 'app/reservar.html', {'servicio': servicio, 'horas_disponibles': horas_disponibles})
 
+# probando reserva por medio de calendario
 
-def validar_disponibilidad(manicurista, fecha_hora):
-    reservas = Reserva.objects.filter(manicurista=manicurista, fecha_hora=fecha_hora)
-    if reservas.exists():
-        raise ValidationError("El manicurista ya tiene una reserva en ese horario.")
+def calendario(request, id_servicio):
+    return render(request, 'app/reservas/calendario.html', {'id_servicio': id_servicio})
 
-def reserva_detalle(request, reserva_id):
-    reserva = get_object_or_404(Reserva, id=reserva_id)
-    return render(request, 'app/usuario/reserva_detalle.html', {'reserva': reserva})
+# def obtener_eventos(request):
+#     # Obtener los parámetros de la solicitud
+#     fecha_inicio = request.GET.get('start')
+#     fecha_fin = request.GET.get('end')
+#     id_servicio = request.GET.get('id_servicio')
+
+#     if not fecha_inicio or not fecha_fin or not id_servicio:
+#         return JsonResponse({'error': 'Faltan parámetros'}, status=400)
+
+#     # Parsear las fechas recibidas
+#     fecha_inicio = parse_datetime(fecha_inicio)
+#     fecha_fin = parse_datetime(fecha_fin)
+
+#     # Filtrar eventos por rango de fechas y servicio
+#     eventos = Evento.objects.filter(servicio_id=id_servicio, inicio__range=[fecha_inicio, fecha_fin])
+
+#     # Crear la lista de eventos
+#     eventos_json = []
+#     for evento in eventos:
+#         eventos_json.append({
+#             'id': evento.id,
+#             'title': evento.titulo,
+#             'start': evento.inicio.isoformat(),
+#             'end': evento.fin.isoformat() if evento.fin else evento.inicio.isoformat(),  # Aquí se maneja el evento sin fin
+#             'description': evento.descripcion,
+#             'manicurista': evento.manicurista.name if evento.manicurista else '',
+#             'cliente': evento.cliente.username,
+#         })
+
+#     return JsonResponse(eventos_json, safe=False)
+# 
+    
+def eventos(request):
+    # Ejemplo: Cargar horarios disponibles para un servicio
+    eventos = [
+        {
+            'title': 'Horario disponible',
+            'start': '2024-11-20T09:00:00',
+            'end': '2024-11-20T10:00:00',
+            'url': '/reservar/1/'
+        },
+        {
+            'title': 'Horario disponible',
+            'start': '2024-11-20T10:30:00',
+            'end': '2024-11-20T11:30:00',
+            'url': '/reservar/2/'
+        }
+    ]
+    return JsonResponse(eventos, safe=False)
+
+
+# 
+
+# def validar_disponibilidad(manicurista, fecha_hora):
+#     reservas = Reserva.objects.filter(manicurista=manicurista, fecha_hora=fecha_hora)
+#     if reservas.exists():
+#         raise ValidationError("El manicurista ya tiene una reserva en ese horario.")
+
+# def reserva_detalle(request, reserva_id):
+#     reserva = get_object_or_404(Reserva, id=reserva_id)
+#     return render(request, 'app/usuario/reserva_detalle.html', {'reserva': reserva})
+
 
 # def reservamensual(request):
 #     is_manicurista = request.user.groups.filter(name='manicurista').exists()
@@ -469,9 +529,6 @@ def misservicios(request):
 
 # aprobación manicurista
 
-# @login_required
-# def espera_aprobacion(request):
-#     return render(request, 'app/manicurista/espera_aprobacion.html')
 @login_required
 def espera_aprobacion(request):
     if hasattr(request.user, 'manicurista'):

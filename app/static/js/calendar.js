@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
       ],
 
     dateClick: function(info) {
-        window.location.href = '/reserServ/';
+        window.location.href = '';
     }
 
     });

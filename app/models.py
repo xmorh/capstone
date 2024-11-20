@@ -47,4 +47,18 @@ class Manicurista(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+# para reservas eventos
+class Evento(models.Model):
+    cliente = models.ForeignKey(User, on_delete=models.CASCADE)
+    servicio = models.ForeignKey('Servicio', on_delete=models.CASCADE)
+    manicurista = models.ForeignKey('Manicurista', on_delete=models.CASCADE, null=True, blank=True)
+    titulo = models.CharField(max_length=200)
+    inicio = models.DateTimeField()
+    fin = models.DateTimeField(null=True, blank=True)
+    descripcion = models.TextField(null=True, blank=True)
+    
+    def __str__(self):
+        return self.titulo
 

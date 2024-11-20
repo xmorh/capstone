@@ -38,10 +38,12 @@ urlpatterns = [
     # path('api/reservas/', api_reservas, name='api_reservas'),
     path('api/reservas-falsas/', api_reservas_falsas, name='api_reservas_falsas'),
     path('reservar/<int:servicio_id>/', hacer_reserva, name='hacer_reserva'),
-    path('reserva/<int:reserva_id>/', reserva_detalle, name='reserva_detalle'),
+    # path('reserva/<int:reserva_id>/', reserva_detalle, name='reserva_detalle'),
     path('confirmar-reserva/<int:servicio_id>/', confirmar_reserva, name='confirmar_reserva'),
     path('calendario/', CalendarioView.as_view(), name='calendario'),
     path('reserServ/', reserServ, name='reserServ'),
+    path('reserva/<int:id_servicio>/', calendario, name='calendario'),
+    # path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
     
 ]
 
