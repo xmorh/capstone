@@ -69,6 +69,8 @@
                 const currentView = calendar.view.type;
 
                 if (currentView === 'timeGridDay') {
+
+                    var mani = getElementById('servicio')
                     
                     const selectedDate = new Date(info.start);
 
@@ -76,6 +78,19 @@
                     const localTime = selectedDate.toLocaleTimeString('es-CL', options);
 
                     alert(`Has seleccionado el horario: ${localTime}`);
+                    console.log('console antes fetch',info)
+                    // fetch(`{% url 'crear_evento' %}?start=${info.startStr}&end=${info.endStr}`)
+                    fetch(`{% url 'crear_evento' %}?start=${info.startStr}&end=${info.endStr}&m=${}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al cargar los eventos  2');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                         // Pasar eventos al calendario
+                    })
                 } else {
                     // ignora las selecciones en vistas que no sean de horario
                     console.log('No se seleccionó una hora específica.');

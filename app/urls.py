@@ -44,6 +44,7 @@ urlpatterns = [
     path('reserServ/', reserServ, name='reserServ'),
     path('reserva/<int:id_servicio>/', calendario, name='calendario'),
     path('eventos/', eventos, name='eventos'),
+    path('crear_evento', crear_evento, name='crear_evento'),
     # path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
     
 ]

@@ -188,6 +188,13 @@ def eventos(request):
     print(eventos_json)
     return JsonResponse(eventos_json, safe=False)
 
+def crear_evento(request):
+
+    fecha_inicio = request.GET.get('start')
+    fecha_fin = request.GET.get('end')
+    print('fecha inicio: ', fecha_inicio, 'fecha fin: ', fecha_fin)
+    return JsonResponse(fecha_inicio, safe=False)
+
 # def validar_disponibilidad(manicurista, fecha_hora):
 #     reservas = Reserva.objects.filter(manicurista=manicurista, fecha_hora=fecha_hora)
 #     if reservas.exists():
