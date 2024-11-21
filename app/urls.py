@@ -43,6 +43,7 @@ urlpatterns = [
     path('calendario/', CalendarioView.as_view(), name='calendario'),
     path('reserServ/', reserServ, name='reserServ'),
     path('reserva/<int:id_servicio>/', calendario, name='calendario'),
+    path('eventos/', eventos, name='eventos'),
     # path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
     
 ]
