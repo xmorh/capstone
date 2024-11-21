@@ -10,9 +10,9 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 from django.views import View
-from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm, ReservaForm
+from .forms import *
 from django.views.generic import ListView
-from .models import Manicurista, TipoServicio, Servicio, Reserva, Evento
+from .models import *
 from datetime import timedelta
 
 # Create your views here.
@@ -273,8 +273,73 @@ def confirmar_reserva(request, servicio_id):
 def detallereserva(request):
     return render(request, 'app/manicurista/reservas/detallereserva.html')
 
-def milocal(request):
-    return render(request, 'app/manicurista/informacion/milocal.html')
+def editarLocal(request, id_local):
+
+    local = get_object_or_404(Local, id_local=id_local)
+
+    data = {
+        'form': LocalForm(instance=local)
+    }
+
+    if request.method == 'POST':
+        formulario = LocalForm(data=request.POST, instance=local, files=request.FILES)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect(to="local")
+        data["form"] = formulario
+
+
+    return render(request, 'app/manicurista/informacion/editarLocal.html', data)
+
+@login_required
+@group_required('manicurista')
+def local(request):
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            return redirect('espera_aprobacion')
+        
+    manicurista = request.user.manicurista  
+
+    try:
+        local = Local.objects.get(manicurista=manicurista)
+    except Local.DoesNotExist:
+        local = None 
+    context = {
+        'manicurista': manicurista,
+        'local': local,
+    }
+    return render(request, 'app/manicurista/informacion/local.html', {'manicurista': manicurista, 'local': local, 'is_manicurista': is_manicurista})
+
+@login_required
+@group_required('manicurista')
+def milocal(request):     
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            return redirect('espera_aprobacion')
+
+    local = Local.objects.filter(manicurista=manicurista).select_related('local')
+    data = {
+        'form': LocalForm(),
+        'local': local,
+        'is_manicurista': is_manicurista,
+    }
+
+    if request.method == 'POST':
+        formulario = LocalForm(request.POST, files=request.FILES)
+        if formulario.is_valid():
+            local = formulario.save(commit=False)
+            local.manicurista = manicurista
+            local.save()
+            data["mensaje"] = "Guardado correctamente"
+        else:
+            data["form"] = formulario
+
+     
+    return render(request, 'app/manicurista/informacion/milocal.html', data)
 
 @login_required
 @group_required('manicurista')

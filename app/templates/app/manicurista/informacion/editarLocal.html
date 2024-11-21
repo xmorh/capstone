@@ -1,7 +1,8 @@
 {% extends 'app/base.html' %}
-{% load static %} 
+{% load static %}
 {% block contenido %}
-
+{% load tailwind_filters %}
+<!-- Mi Local -->
 <script src="{% static 'js/menu.js' %}" defer></script>
 
 <button id="toggleSidebar" 
@@ -35,50 +36,23 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
     </aside>
 
 
-<style>
-    .fc-button {
-        background-color: #DE98B1; /* Fondo rosa */
-        color: white; /* Texto blanco */
-        padding: 0.5rem 1rem; /* Espaciado interno */
-        border-radius: 0.375rem; /* Bordes redondeados */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
-        transition: background-color 0.2s ease-in-out;
-    }
-    .fc-button:hover {
-        background-color: #C57897; /* Hover más oscuro */
-    }
-    .fc-toolbar-title {
-        color: #FF1493; /* Título rosa */
-        font-weight: bold;
-        font-size: 1.125rem; /* Tamaño de texto */
-    }
-</style>
+    <div class="flex-1 p-10 bg-white shadow-lg rounded-lg">
 
-<div class="w-full h-screen">
-    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Reservas del Mes</h2>
-    <div class="flex items-center justify-center py-10">
-        <div class="max-w-5xl w-full bg-white rounded-lg shadow-lg p-6">
-            <!-- Contenedor del Calendario -->
-            <div id="calendar" class="w-full h-[700px]"></div>
-        </div>
-    </div>
+            <div class="bg-white shadow-lg rounded-lg p-6 mb-10">
+
+                <h2 class="text-3xl font-bold text-center mb-6 text-[#020617]">Mi local</h2>
+            
+                <form action="" method="post" enctype="multipart/form-data">
+                    
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    
+                    <div class="d-flex justify-content-end">
+                        <input type="submit" value="Guardar" class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300">
+                    </div>
+                </form>
+            
+            </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: '/api/reservas-falsas/', // Ruta para eventos
-        });
-        calendar.render();
-    });
-</script>
 
 {% endblock %}

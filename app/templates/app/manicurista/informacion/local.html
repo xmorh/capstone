@@ -1,6 +1,7 @@
 {% extends 'app/base.html' %}
 {% load static %}
 {% block contenido %}
+{% load tailwind_filters %}
 <!-- Mi Local -->
 <script src="{% static 'js/menu.js' %}" defer></script>
 
@@ -34,47 +35,47 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
     </ul>
     </aside>
 
+<br> <br>
 
-    <div class="flex-1 p-10 bg-white shadow-lg rounded-lg">
+<div class="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto container mx-auto p-5 mb-20">
+    <h2 class="text-2xl font-bold mb-6 text-center">Mi Local</h2>
 
-
-
-        <h2 class="text-2xl font-bold text-[#FF1493] text-center mb-4 py-5">Mi Local</h2>
-        <form>
+    {% if local %}
+        <div class="py-5">
             <div class="mb-6">
-                <label for="salon" class="block mb-2 text-sm font-medium text-gray-700">Nombre del Salón o
-                    Negocio</label>
-                <input type="text" id="salon" value="Beauty Nails"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                    required>
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Nombre del Salón o Negocio:</label>
+                <p class="text-gray-600">{{ local.nombre }}</p>
             </div>
             <div class="mb-6">
-                <label for="contacto" class="block mb-2 text-sm font-medium text-gray-700">Número de
-                    contacto</label>
-                <input type="tel" id="contacto" value="+569 8765 4321"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                    required>
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Número de contacto:</label>
+                <p class="text-gray-600">{{ local.numero_telefono }}</p>
             </div>
             <div class="mb-6">
-                <label for="direccion" class="block mb-2 text-sm font-medium text-gray-700">Dirección</label>
-                <input type="text" id="direccion" value="Calle Falsa 123"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                    required>
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Dirección:</label>
+                <p class="text-gray-600">{{ local.direccion }}</p>
             </div>
             <div class="mb-6">
-                <label for="comuna" class="block mb-2 text-sm font-medium text-gray-700">Comuna</label>
-                <input type="text" id="comuna" value="Santiago Centro"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                    required>
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Comuna:</label>
+                <p class="text-gray-600">{{ local.comuna.nombre }}</p>
             </div>
-            <div class="flex justify-end">
-                <button type="submit"
-                    class="bg-[#FF1493] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
-                    Guardar cambios
-                </button>
-            </div>
-        </form>
+        </div>
+
+        <div class="flex justify-center">
+            <a href="{% url 'editarlocal' local.id_local %}"
+                                    class="bg-pink-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-pink-600">Editar</a>
+        </div>
+
+    {% else %}
+        <p class="text-center text-gray-500">No tienes un local asociado.</p>
+        <div class="flex justify-center mt-6">
+            <a href="{% url 'milocal' %}" 
+               class="bg-pink-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-700 transition duration-300">
+                Agregar mi local
+            </a>
+        </div>
     </div>
+{% endif %}
 </div>
-
+</div>
+    
 {% endblock %}
