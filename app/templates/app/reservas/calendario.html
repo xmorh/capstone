@@ -80,7 +80,7 @@
                     alert(`Has seleccionado el horario: ${localTime}`);
                     console.log('console antes fetch',info)
                     // fetch(`{% url 'crear_evento' %}?start=${info.startStr}&end=${info.endStr}`)
-                    fetch(`{% url 'crear_evento' %}?start=${info.startStr}&end=${info.endStr}&m=${}`)
+                    fetch(`{% url 'crear_evento' %}?start=${info.startStr}&end=${info.endStr}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Error al cargar los eventos  2');
