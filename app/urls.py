@@ -45,9 +45,10 @@ urlpatterns = [
     path('reserva/<int:id_servicio>/', calendario, name='calendario'),
     path('eventos/', eventos, name='eventos'),
     path('crear_evento', crear_evento, name='crear_evento'),
-        path('local/', local, name='local'),
+    path('local/', local, name='local'),
     path('editarlocal/<id_local>', editarLocal, name='editarlocal'),
-    # path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
+    path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
+    # path('crear_reserva/', crear_reserva, name='crear_reserva'),
     
 ]
 

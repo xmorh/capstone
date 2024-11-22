@@ -2,6 +2,15 @@
 {% load static %}
 {% block contenido %}
 
+<div class="h-full flex flex-col items-center min-h-screen bg-gray-100 p-6">
+  <h1 class="text-4xl font-bold text-gray-800 mb-4">Agendar Hora</h1>
+  <p class="text-lg text-gray-600 mb-6">Seleccione la fecha que desea</p>
+
+  <div class="w-4/5 h-64 flex-grow bg-white shadow-md rounded-lg p-4">
+      <div id="calendar" class="h-full w-full"></div>
+  </div>
+</div>
+
 <div id="calendar"></div>
 <script src="{% static 'js/calendar.js' %}">
 
@@ -33,6 +42,12 @@
     margin-bottom: 20px;
     margin-top: 20px;
   }
+
+  .fc-disabled-day {
+    pointer-events: none; /* Evita clics */
+    background-color: #f0f0f0; /* Color gris */
+    color: #999; /* Texto deshabilitado */
+    }
 </style>
 
 {% endblock %}

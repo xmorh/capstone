@@ -28,7 +28,6 @@
         </div>
         <div class="container mx-auto py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {% for s in servicio %}
-            <div id="servicio">{{s}}</div>
             <div class="border-2 border-[#FF1493] bg-white p-4 rounded-lg shadow-md flex flex-col h-full">
                 <div class="flex flex-col items-center mb-auto">
                     <img src="{{ s.manicurista.profile_picture.url }}" alt="foto" class="w-24 h-24 rounded-full">

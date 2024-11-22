@@ -13,7 +13,9 @@ from django.views import View
 from .forms import *
 from django.views.generic import ListView
 from .models import *
-from datetime import timedelta
+from datetime import timedelta, datetime
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -158,7 +160,7 @@ def hacer_reserva(request, servicio_id):
 # probando reserva por medio de calendario
 
 def calendario(request, id_servicio):
-    return render(request, 'app/reservas/calendario.html', {'id_servicio': id_servicio})
+    return render(request, 'app/calendario.html', {'id_servicio': id_servicio})
     
 def eventos(request):
     # Ejemplo: Cargar horarios disponibles para un servicio
@@ -671,3 +673,67 @@ def reserServ (request):
         'servicio': servicio,
     }
     return render(request, 'app/reserServ.html', data)
+
+# Obtener los eventos a fullCalendar
+# def obtener_eventos(request):
+#    from django.http import JsonResponse
+
+def obtener_eventos(request):
+    eventos = Evento.objects.all()
+
+    # Preparar los eventos para FullCalendar
+    eventos_data = []
+    for evento in eventos:
+        eventos_data.append({
+            'title': str(evento.fecha_inicio),  # Título del evento (puedes agregar más detalles si lo deseas)
+            'start': evento.fecha_inicio.isoformat(),  # Convertir a formato ISO 8601
+            'end': evento.fecha_fin.isoformat() if evento.fecha_fin else evento.fecha_inicio.isoformat(),
+            'color': '#FFC0CB'  # Fecha de fin (si existe)
+        })
+
+    return JsonResponse(eventos_data, safe=False)
+
+# crear reserva
+
+@csrf_exempt
+def crear_reserva(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            id_servicio = data.get('id_servicio')
+            fecha_inicio = data.get('fecha_inicio')
+            fecha_fin = data.get('fecha_fin')
+            id_manicurista = data.get('id_manicurista')
+
+            # Validar campos
+            if not id_servicio or not fecha_inicio or not id_manicurista:
+                return JsonResponse({'success': False, 'message': 'Faltan datos obligatorios'})
+
+            # Convertir fechas de string a objeto datetime
+            fecha_inicio = datetime.fromisoformat(fecha_inicio)
+            fecha_fin = datetime.fromisoformat(fecha_fin) if fecha_fin else None
+
+            # Obtener el usuario actual (ajusta esto según tu lógica)
+            usuario = User.objects.first()
+
+            # Obtener objetos relacionados
+            servicio = Servicio.objects.get(id=id_servicio)
+            manicurista = Manicurista.objects.get(id=id_manicurista)
+
+            # Crear la reserva
+            reserva = Reserva(
+                cliente=usuario,
+                servicio=servicio,
+                manicurista=manicurista,
+                fecha_inicio=fecha_inicio,
+                fecha_fin=fecha_fin
+            )
+            reserva.save()
+
+            return JsonResponse({'success': True, 'message': 'Reserva creada correctamente'})
+        except Servicio.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'El servicio no existe'})
+        except Manicurista.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'El manicurista no existe'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Error inesperado: {str(e)}'})
