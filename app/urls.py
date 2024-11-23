@@ -49,6 +49,10 @@ urlpatterns = [
     path('cancelarEvento/<int:id_evento>/', cancelarEvento, name='cancelarEvento'),
     path('reservasdia/', reservasdia, name='reservasdia'),
     path('eventosMani/', eventosMani, name='eventosMani'),
+    path('local/', local, name='local'),
+    path('editarlocal/<id_local>', editarLocal, name='editarlocal'),
+    path('/editardatos/<id>', editardatos, name='editardatos'),
+
 
     
     

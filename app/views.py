@@ -12,9 +12,9 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 from django.views import View
-from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm
+from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, LocalForm, ManicuristaForm
 from django.views.generic import ListView
-from .models import Manicurista, TipoServicio, Servicio, Reserva, Evento
+from .models import Manicurista, TipoServicio, Servicio, Reserva, Evento, Local
 from datetime import datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
@@ -269,10 +269,6 @@ def reagendarExitoso(request):
 def reagendar(request, id_evento):
     id_servicio = request.GET.get('servicio')
     return render(request, 'app/reservas/reagendar.html', {'id_servicio': id_servicio, 'id_evento': id_evento})
-
-
-def milocal(request):
-    return render(request, 'app/manicurista/informacion/milocal.html')
 
 def detallereserva(request, event_id):
     evento = get_object_or_404(Evento, id=event_id)
@@ -608,8 +604,6 @@ def rechazar_manicurista(request, manicurista_id):
         'ya_rechazado': False
     })
 
-# actualizar certificado
-
 
 @login_required
 def actualizar_certificacion(request):
@@ -647,3 +641,107 @@ def reserServ (request):
         'servicio': servicio,
     }
     return render(request, 'app/reserServ.html', data)
+
+# local
+def editarLocal(request, id_local):
+
+    local = get_object_or_404(Local, id_local=id_local)
+
+    data = {
+        'form': LocalForm(instance=local)
+    }
+
+    if request.method == 'POST':
+        formulario = LocalForm(data=request.POST, instance=local, files=request.FILES)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect(to="local")
+        data["form"] = formulario
+
+
+    return render(request, 'app/manicurista/informacion/editarLocal.html', data)
+
+@login_required
+@group_required('manicurista')
+def local(request):
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            return redirect('espera_aprobacion')
+        
+    manicurista = request.user.manicurista  
+
+    try:
+        local = Local.objects.get(manicurista=manicurista)
+    except Local.DoesNotExist:
+        local = None 
+    context = {
+        'manicurista': manicurista,
+        'local': local,
+    }
+    return render(request, 'app/manicurista/informacion/local.html', {'manicurista': manicurista, 'local': local, 'is_manicurista': is_manicurista})
+
+@login_required
+@group_required('manicurista')
+def milocal(request):     
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            return redirect('espera_aprobacion')
+
+    local = Local.objects.filter(manicurista=manicurista).select_related('local')
+    data = {
+        'form': LocalForm(),
+        'local': local,
+        'is_manicurista': is_manicurista,
+    }
+
+    if request.method == 'POST':
+        formulario = LocalForm(request.POST, files=request.FILES)
+        if formulario.is_valid():
+            local = formulario.save(commit=False)
+            local.manicurista = manicurista
+            local.save()
+            data["mensaje"] = "Guardado correctamente"
+        else:
+            data["form"] = formulario
+
+     
+    return render(request, 'app/manicurista/informacion/milocal.html', data)
+
+def editardatos(request, id):
+    manicurista = get_object_or_404(Manicurista, id=id)
+
+    if request.method == "POST":
+        form = ManicuristaForm(request.POST, request.FILES, instance=manicurista)
+        if form.is_valid():
+            form.save()
+            return redirect('misdatos') 
+    else:
+        form = ManicuristaForm(instance=manicurista)
+    return render(request, 'app/manicurista/informacion/editardatos.html', {'form': form, 'manicurista': manicurista})
+
+@login_required
+@group_required('manicurista')
+def misdatos(request):
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            return redirect('espera_aprobacion')
+        
+    manicurista = request.user.manicurista
+
+    # Suponiendo que tienes un modelo extendido o información adicional en otro modelo
+    # por ejemplo: usuario.manicurista
+    context = {
+        'manicurista': manicurista,  # Cambia esto según tu modelo o lógica
+    }
+
+    return render(request, 'app/manicurista/informacion/misdatos.html', {'is_manicurista': is_manicurista, 
+        'manicurista': manicurista,
+        'context': context})
+
+

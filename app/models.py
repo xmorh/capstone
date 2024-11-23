@@ -64,3 +64,22 @@ class Evento(models.Model):
     def __str__(self):
         return f"Evento #{self.id} - Cliente: {self.cliente} - Servicio: {self.servicio} - Manicurista: {self.manicurista} - Fecha de inicio: {self.fecha_inicio}"
 
+
+class Local(models.Model):
+    id_local = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50)
+    numero_telefono = models.CharField(max_length=50)
+    direccion = models.CharField(max_length=50)
+    comuna = models.ForeignKey('Comuna', on_delete=models.CASCADE)
+    manicurista = models.ForeignKey('Manicurista', on_delete=models.CASCADE)
+
+    def _str_(self):
+        return self.nombre
+    
+class Comuna(models.Model):
+    id_comuna = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50)
+    region = models.CharField(max_length=50)
+
+    def _str_(self):
+        return self.nombre

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.models import Manicurista, Servicio, TipoServicio, Reserva, Evento
+from app.models import Manicurista, Servicio, TipoServicio, Reserva, Evento, Local, Comuna
 
 
 # Register your models here.
@@ -29,4 +29,7 @@ admin.site.register(Manicurista)
 admin.site.register(Servicio, ServicioAdmin)
 admin.site.register(TipoServicio,TipoServicioAdmin)
 admin.site.register(Evento, EventoAdmin)
+admin.site.register(Local)
+admin.site.register(Comuna)
+
 

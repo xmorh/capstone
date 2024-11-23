@@ -1,0 +1,81 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block contenido %}
+{% load tailwind_filters %}
+<!-- Mi Local -->
+<script src="{% static 'js/menu.js' %}" defer></script>
+
+<button id="toggleSidebar" 
+        class="absolute top-4 left-4 z-10 bg-[#DE98B1] text-white p-2 rounded-md shadow-md hover:bg-pink-700 transition">
+    ☰ Menú
+</button>
+
+<aside id="sidebar" 
+class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 z-20">
+
+<button id="closeSidebar" 
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="sr-only">Cerrar menú</span>
+    </button>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-4"> </h2>
+        <ul class="space-y-4">
+    <li>
+        <a href="{% url 'misdatos' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis Datos</a>
+    </li>
+    <li>
+        <a href="{% url 'misservicios' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis Servicios</a>
+    </li>
+    <li>
+        <a href="{% url 'local' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mi Local</a>
+    </li>
+    </ul>
+    </aside>
+
+<br> <br>
+
+<div class="bg-white shadow-md rounded-lg p-6 max-w-md mx-auto container  mb-20">
+    <h2 class="text-2xl font-bold mb-6 text-center">Mi Local</h2>
+
+    {% if local %}
+        <div class="py-5">
+            <div class="mb-6">
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Nombre del Salón o Negocio:</label>
+                <p class="text-gray-600">{{ local.nombre }}</p>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Número de contacto:</label>
+                <p class="text-gray-600">{{ local.numero_telefono }}</p>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Dirección:</label>
+                <p class="text-gray-600">{{ local.direccion }}</p>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 text-lg font-semibold text-gray-700">Comuna:</label>
+                <p class="text-gray-600">{{ local.comuna.nombre }}</p>
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <a href="{% url 'editarlocal' local.id_local %}"
+                                    class="bg-pink-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-pink-600">Editar</a>
+        </div>
+
+    {% else %}
+        <p class="text-center text-gray-500">No tienes un local asociado.</p>
+        <div class="flex justify-center mt-6">
+            <a href="{% url 'milocal' %}" 
+               class="bg-pink-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-700 transition duration-300">
+                Agregar mi local
+            </a>
+        </div>
+    </div>
+{% endif %}
+</div>
+</div>
+    
+{% endblock %}
