@@ -3,7 +3,7 @@
 {% load humanize %}
 {% block contenido %}
 <div class="h-screen">
-    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Detalle Reserva Mensual</h2>
+    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Tus Reservaa</h2>
 
     <div class=" flex items-center justify-center py-10">
         <div class="max-w-4xl w-full bg-white rounded-lg shadow-lg p-6">
@@ -15,6 +15,7 @@
                         <th class="py-3 px-4">Duración</th>
                         <th class="py-3 px-4">Valor</th>
                         <th class="py-3 px-4">Cliente</th>
+                        <th class="py-3 px-4">Fecha</th>
                         <th class="py-3 px-4">Hora</th>
                         <th class="py-3 px-4">Acciones</th>
                     </tr>
@@ -27,15 +28,12 @@
                         <td class="py-3 px-4">{{ reserva.duracion }}min.</td>
                         <td class="py-3 px-4">${{ reserva.valor | intcomma }}</td>
                         <td class="py-3 px-4">{{ reserva.cliente }}</td>
+                        <td class="py-3 px-4">{{ reserva.fecha }}</td>
                         <td class="py-3 px-4">{{ reserva.hora }}hrs.</td>
                         <td class="py-3 px-4 text-center">
-                            <a href="{% url 'reagendar' reserva.id %}?servicio={{ reserva.id_servicio }}" class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition self-center">
+                            <a href="{% url 'reagendar' reserva.id %}?servicio={{ reserva.id_servicio }}" class="inline-block text-white font-semibold py-3 px-6 rounded-lg bg-[#FF1493] hover:bg-pink-500 transition duration-300 shadow ">
                                 Reagendar
                             </a>
-                            <button
-                                class="bg-[#DA0000] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
-                                Cancelar
-                            </button>
                         </td>
                     </tr>
                     {% endfor %}

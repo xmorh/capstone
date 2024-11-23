@@ -127,6 +127,7 @@ def misreservas(request):
             'duracion': evento.servicio.tipo_servicio.duracion,
             'valor': evento.servicio.valor,
             'cliente': evento.cliente.username,
+            'fecha': fecha_modificada.strftime("%d-%m-%Y"),
             'hora': fecha_modificada.strftime("%H:%M"),
         })
     return render(request, 'app/usuario/misreservas.html', { 'reservas': eventos_json })
@@ -195,15 +196,14 @@ def crear_evento(request):
 def reagendar_evento(request):
     fecha_inicio = request.GET.get('start')
     id_servicio = request.GET.get('id_servicio')
-    # id del evento anterior
+    # Eliminar Evento antiguo
     id_evento = request.GET.get('id_evento')
 
     old_evento = Evento.objects.filter(id=id_evento)
 
-    print(old_evento[0])
-
     old_evento.delete()
 
+    # Crear evento nuevo
     servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]
 
     fecha = datetime.fromisoformat(fecha_inicio)
@@ -231,7 +231,6 @@ def reagendar_evento(request):
 
     return JsonResponse(evento_data, safe=False)
 
-
 def obtener_duracion_servicio(request):
     id_servicio = request.GET.get('id_servicio')
     servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]
@@ -249,48 +248,15 @@ def reservamensual(request):
         'is_manicurista': is_manicurista,
     })
 
+def horaAgendada(request):
+    return render(request, 'app/reservas/horaAgendada.html')
+
+def reagendarExitoso(request):
+    return render(request, 'app/reservas/reagendarExitoso.html')
+
 def reagendar(request, id_evento):
     id_servicio = request.GET.get('servicio')
     return render(request, 'app/reservas/reagendar.html', {'id_servicio': id_servicio, 'id_evento': id_evento})
-
-# def api_reservas(request):
-#     # Simulación de reservas (en un futuro, reemplaza con datos reales de tu modelo)
-#     reservas = [
-#         {
-#             "title": "Reserva de ejemplo",
-#             "start": "2024-11-10",
-#             "url": "/detallereserva/"
-#         },
-#         {
-#             "title": "Otra reserva",
-#             "start": "2024-11-12",
-#             "url": "/detallereserva/"
-#         },
-#     ]
-#     return JsonResponse(reservas, safe=False)
-def api_reservas_falsas(request):
-    from datetime import datetime, timedelta
-
-    hoy = datetime.now()
-    reservas_falsas = []
-
-    for i in range(5):  # Crear 5 reservas
-        dia_reserva = hoy + timedelta(days=i * 3)  # Cada 3 días
-        reservas_falsas.append({
-            "title": f"Reserva Falsa {i + 1}",
-            "start": dia_reserva.strftime('%Y-%m-%d'),
-            "url": "/detallereserva/",  # Puedes ajustar esta URL
-            "className": "bg-[#DE98B1] text-white rounded-lg shadow-md hover:bg-[#C57897]"
-        })
-
-    return JsonResponse(reservas_falsas, safe=False)
-
-
-def confirmar_reserva(request, servicio_id):
-    # Lógica para manejar la confirmación
-    return render(request, 'app/usuario/confirmar_reserva.html', {'servicio_id': servicio_id})
-
-# 
 
 def detallereserva(request):
     return render(request, 'app/manicurista/reservas/detallereserva.html')

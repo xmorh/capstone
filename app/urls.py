@@ -34,11 +34,7 @@ urlpatterns = [
     path('modificarserv/<id_tipo_servicio>/', modificarserv, name='modificarserv'),
     # 
     path('reservamensual', reservamensual, name='reservamensual'), 
-    path('detallereserva', detallereserva, name='detallereserva'), 
-    # path('api/reservas/', api_reservas, name='api_reservas'),
-    path('api/reservas-falsas/', api_reservas_falsas, name='api_reservas_falsas'),
-    # path('reserva/<int:reserva_id>/', reserva_detalle, name='reserva_detalle'),
-    path('confirmar-reserva/<int:servicio_id>/', confirmar_reserva, name='confirmar_reserva'),
+    path('detallereserva', detallereserva, name='detallereserva'),
     path('calendario/', CalendarioView.as_view(), name='calendario'),
     path('reserServ/', reserServ, name='reserServ'),
     path('reserva/<int:id_servicio>/', calendario, name='calendario'),
@@ -46,8 +42,10 @@ urlpatterns = [
     path('crear_evento/', crear_evento, name='crear_evento'),
     path('reagendar_evento/', reagendar_evento, name='reagendar_evento'),
     path('reagendar/<int:id_evento>/', reagendar, name='reagendar'),
-    path('obtener_duracion_servicio/', obtener_duracion_servicio, name='obtener_duracion_servicio')
-    # path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
+    path('obtener_duracion_servicio/', obtener_duracion_servicio, name='obtener_duracion_servicio'),
+    path('horaAgendada/', horaAgendada, name='horaAgendada'),
+    path('reagendarExitoso/', reagendarExitoso, name='reagendarExitoso'),
+    
     
 ]
 
