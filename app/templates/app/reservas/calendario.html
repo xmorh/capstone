@@ -10,112 +10,139 @@
         <div id="calendar" class="h-full w-full"></div>
     </div>
 </div>
+
 <script defer>
 const eventosURL = "{% url 'eventos' %}";
 const crearEventoURL = "{% url 'crear_evento' %}";
 </script>
+
 <script defer>
-// TODO: Buscar forma de inhabilitar hora de colacion por dia, contemplar la hora al agendar y en la función agregarDiasDeshabilitados
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
     var id_servicio = document.getElementById('servicio').value;
+    var disabledDays = []; // Lista de días deshabilitados
+    var occupiedSlots = {}; // Objeto para almacenar horarios ocupados por día
 
-    var disabledDays = ['2024-11-23', '2024-11-25'];
-
-    function agregarDiasDeshabilitados(eventos) { // data debe ser la lista de eventos del mes
-        // recorrer eventos por dia y ver si hay horas disponibles y guardarlos en disabledDays
+    // Lógica para agregar los días ocupados
+    function agregarDiasDeshabilitados(eventos) {
+        eventos.forEach(event => {
+            const eventDate = event.start.slice(0, 10);  // Fecha en formato YYYY-MM-DD
+    
+            // Inicializa el contador de eventos para la fecha
+            if (!occupiedSlots[eventDate]) {
+                occupiedSlots[eventDate] = [];
+            }
+            occupiedSlots[eventDate].push(event.start.slice(11, 16));  // Almacenar los horarios ocupados
+    
+            // Verifica cuántos eventos hay en ese día
+            if (occupiedSlots[eventDate].length >= 5 && !disabledDays.includes(eventDate)) {
+                disabledDays.push(eventDate);  // Marcar el día como deshabilitado si tiene 3 o más eventos
+            }
+        });
+        
     }
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'es',
         headerToolbar: {
-            left: 'prev,next',
-            center: 'title',
-            right: 'dayGridMonth,timeGridDay'
-        },
+        left: 'prev,next',
+        center: 'title',
+        right: 'dayGridMonth,timeGridDay'
+    },
         buttonText: {
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día',
-            list: 'Lista'
-        },
+        today: 'Hoy',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día',
+        list: 'Lista'
+    },
         events: function (fetchInfo, successCallback, failureCallback) {
-            // Usar Fetch API para cargar eventos desde el servidor
-            fetch(`${eventosURL}?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al cargar los eventos');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    successCallback(data); // Pasar eventos al calendario
-                });
-        },
+        fetch(`${eventosURL}?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al cargar los eventos');
+                }
+                return response.json();
+            })
+            .then(data => {
+                agregarDiasDeshabilitados(data);  // Actualiza días deshabilitados
+                successCallback(data);
+            });
+    },
+        datesSet: function (info) {
+        // Aplicar clase a los días deshabilitados
+        aplicarDiasDeshabilitados();
+    },
+        eventsSet: function (events) {
+        // Aplicar clase a los días deshabilitados después de cargar eventos
+        aplicarDiasDeshabilitados();
+    },
         dateClick: function (info) {
-            // Evitar clic en días deshabilitados
-            if (disabledDays.includes(info.dateStr)) {
-                return;
-            }
-
-            // Cambiar a la vista de horarios del día seleccionado
-            calendar.changeView('timeGridDay', info.dateStr);
-        },
-        // Permitir selección de horarios
+        // Si el día está deshabilitado, no permitir la selección
+        if (disabledDays.includes(info.dateStr)) {
+            alert('Este día ya no cuenta con más horas.');
+            return;
+        }
+        calendar.changeView('timeGridDay', info.dateStr); 
+    },
         selectable: true,
         allDaySlot: false,
         select: function (info) {
+        const startTime = info.startStr.slice(11, 16); // Extraer solo la hora
+        const endTime = info.endStr.slice(11, 16);
 
-            const currentView = calendar.view.type;
+        // Verificar si el horario ya está ocupado
+        const selectedDate = info.startStr.slice(0, 10);
+        if (occupiedSlots[selectedDate] && occupiedSlots[selectedDate].includes(startTime)) {
+            alert("Esta hora ya está ocupada.");
+            return;
+        }
 
-            if (currentView === 'timeGridDay') {
-                fetch(`{% url 'crear_evento' %}?start=${info.startStr}&end=${info.endStr}&id_servicio=${id_servicio}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error al cargar los eventos');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        calendar.addEvent(data);
-                        // Pasar eventos al calendario
-                    });
-            } else {
-                console.log('No se seleccionó una hora específica.');
-            }
-        },
-
-        datesSet: function (info) { // AUN NO ESTA COMPLETO
-            // Aplicar estilos a los días deshabilitados
-            disabledDays.forEach(date => {
-                let dayCell = document.querySelector(`[data-date="${date}"]`);
-                if (dayCell) {
-                    dayCell.classList.add('fc-disabled-day');
+        fetch(`${crearEventoURL}?start=${info.startStr}&end=${info.endStr}&id_servicio=${id_servicio}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al cargar los eventos');
                 }
+                return response.json();
+            })
+            .then(data => {
+                calendar.addEvent(data);
+                // Añadir el nuevo slot ocupado
+                if (!occupiedSlots[selectedDate]) {
+                    occupiedSlots[selectedDate] = [];
+                }
+                occupiedSlots[selectedDate].push(startTime); // Agregar la hora ocupada
             });
-        },
-        slotDuration: '00:30:00',
-        slotMinTime: '09:00:00',
-        slotMaxTime: '19:00:00',
-        validRange: {
-            start: new Date().toISOString().slice(0, 10) // Establece la fecha de hoy como el inicio
-        },
+    },
+    slotDuration: '00:30:00',
+    slotMinTime: '09:00:00', // 9 AM
+    slotMaxTime: '19:00:00', // 7 PM
+    validRange: {
+        start: new Date().toISOString().slice(0, 10) // Solo días a partir de hoy
+    },
+});
+
+// Función para aplicar clases a los días deshabilitados
+    function aplicarDiasDeshabilitados() {
+    disabledDays.forEach(date => {
+        let dayCell = document.querySelector(`[data-date="${date}"]`);
+        if (dayCell) {
+            dayCell.classList.add('fc-disabled-day'); 
+        }
     });
+}
 
     calendar.render();
 });
-
+    
 </script>
-
 
 <style>
     .fc-disabled-day {
-        pointer-events: none; /* Evita clics */
-        background-color: #f0f0f0; /* Color gris */
-        color: #999; /* Texto deshabilitado */
-        
+        pointer-events: none; /* Impide interacciones */
+        background-color: #f0f0f0; /* Fondo gris */
+        color: #999; /* Texto gris */
     }
 </style>
 
