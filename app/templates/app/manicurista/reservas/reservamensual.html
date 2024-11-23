@@ -81,7 +81,14 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             events: 
-            '' 
+            '{% url "eventosMani" %}' ,
+
+            eventClick: function(info) {
+                // Aquí rediriges a la página de detalles del evento
+                const eventId = info.event.id; // ID del evento
+                // Por ejemplo, redirigir a una vista de detalles del evento
+                window.location.href = '{% url "detallereserva" %}'; 
+            }
         });
         calendar.render();
     });

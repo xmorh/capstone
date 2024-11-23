@@ -34,7 +34,7 @@ urlpatterns = [
     path('modificarserv/<id_tipo_servicio>/', modificarserv, name='modificarserv'),
     # 
     path('reservamensual', reservamensual, name='reservamensual'), 
-    path('detallereserva', detallereserva, name='detallereserva'), 
+    path('detallereserva/<id>', detallereserva, name='detallereserva'), 
     # path('api/reservas/', api_reservas, name='api_reservas'),
     path('api/reservas-falsas/', api_reservas_falsas, name='api_reservas_falsas'),
     # path('reserva/<int:reserva_id>/', reserva_detalle, name='reserva_detalle'),
@@ -47,6 +47,7 @@ urlpatterns = [
     # path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
     path('btnCancelar/<id>/', btnCancelar, name='btnCancelar'), 
     path('/editardatos/<id>', editardatos, name='editardatos'),
+    path('eventosMani/', eventosMani, name='eventosMani'),
     
 ]
 

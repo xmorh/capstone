@@ -258,8 +258,10 @@ def confirmar_reserva(request, servicio_id):
 
 # 
 
-def detallereserva(request):
-    return render(request, 'app/manicurista/reservas/detallereserva.html')
+def detallereserva(request, id):
+    evento = get_object_or_404(Evento, id=id)
+
+    return render(request, 'app/manicurista/reservas/detallereserva.html', {'evento': evento})
 
 def milocal(request):
     return render(request, 'app/manicurista/informacion/milocal.html')
@@ -640,3 +642,17 @@ def editardatos(request, id):
         form = ManicuristaForm(instance=manicurista)
     return render(request, 'app/manicurista/informacion/editardatos.html', {'form': form, 'manicurista': manicurista})
 
+@login_required
+def eventosMani(request):
+    eventos = Evento.objects.filter(manicurista=request.user.manicurista) 
+    eventos_json = []
+
+    for evento in eventos:
+        tipo_servicio = evento.servicio.tipo_servicio  # Accedemos al objeto TipoServicio
+        eventos_json.append({
+            'title': tipo_servicio.nombre,  # Aquí usamos el campo 'nombre' de TipoServicio como título
+            'start': evento.fecha_inicio.strftime('%Y-%m-%dT%H:%M:%S'),
+            'end': evento.fecha_fin.strftime('%Y-%m-%dT%H:%M:%S'),
+        })
+    
+    return JsonResponse(eventos_json, safe=False)
