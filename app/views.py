@@ -639,3 +639,4 @@ def editardatos(request, id):
     else:
         form = ManicuristaForm(instance=manicurista)
     return render(request, 'app/manicurista/informacion/editardatos.html', {'form': form, 'manicurista': manicurista})
+

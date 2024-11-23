@@ -32,8 +32,7 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
         <a href="{% url 'milocal' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mi Local</a>
     </li>
     </ul>
-    </aside>
-
+</aside>
 
 <style>
     .fc-button {
@@ -52,6 +51,12 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
         font-weight: bold;
         font-size: 1.125rem; /* Tamaño de texto */
     }
+
+    /* Reducir la altura del calendario */
+    #calendar {
+        height: 500px; /* Ajustar la altura */
+        margin-bottom: 20px; /* Espacio para el footer */
+    }
 </style>
 
 <div class="w-full h-screen">
@@ -59,7 +64,7 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
     <div class="flex items-center justify-center py-10">
         <div class="max-w-5xl w-full bg-white rounded-lg shadow-lg p-6">
             <!-- Contenedor del Calendario -->
-            <div id="calendar" class="w-full h-[700px]"></div>
+            <div id="calendar" class="w-full h-[500px]"></div>
         </div>
     </div>
 </div>
@@ -75,7 +80,8 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
-            events: '/api/reservas-falsas/', // Ruta para eventos
+            events: 
+            '' 
         });
         calendar.render();
     });

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
             occupiedSlots[eventDate].push(event.start.slice(11, 16));  
     
             
-            if (occupiedSlots[eventDate].length >= 5 && !disabledDays.includes(eventDate)) {
+            if (occupiedSlots[eventDate].length >= 10 && !disabledDays.includes(eventDate)) {
                 disabledDays.push(eventDate);  
             }
         });
