@@ -635,7 +635,7 @@ def editardatos(request, id):
         form = ManicuristaForm(request.POST, request.FILES, instance=manicurista)
         if form.is_valid():
             form.save()
-            return redirect('misdatos')  # Redirigir después de guardar
+            return redirect('misdatos') 
     else:
         form = ManicuristaForm(instance=manicurista)
     return render(request, 'app/manicurista/informacion/editardatos.html', {'form': form, 'manicurista': manicurista})

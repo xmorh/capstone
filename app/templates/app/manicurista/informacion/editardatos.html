@@ -37,17 +37,15 @@
         <div class="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6">
             <h2 class="text-2xl font-bold text-[#FF1493] text-center mb-6">Editar Mis Datos</h2>
 
-            <!-- Formulario -->
             <form method="POST" enctype="multipart/form-data" class="space-y-6">
                 {% csrf_token %}
-                <!-- Imagen de Perfil -->
+
                 <div class="text-center">
                     <label class="block text-sm font-semibold text-gray-700">Foto de Perfil</label>
                     <input type="file" name="profile_picture" accept="image/*" 
                            class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
                 </div>
 
-                <!-- Nombre -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">Nombre</label>
                     <input type="text" name="name" value="{{ manicurista.name }}" 
@@ -57,7 +55,6 @@
                     {% endif %}
                 </div>
 
-                <!-- Usuario -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">Usuario</label>
                     <input type="text" name="user" value="{{ manicurista.user }}" 
@@ -67,7 +64,7 @@
                     {% endif %}
                 </div>
 
-                <!-- RUT -->
+                            }
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">RUT</label>
                     <input type="text" name="rut" value="{{ manicurista.rut }}" 
@@ -77,7 +74,6 @@
                     {% endif %}
                 </div>
 
-                <!-- Botón de enviar -->
                 <div class="flex justify-center">
                     <button type="submit" 
                             class="bg-[#0057FF] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
