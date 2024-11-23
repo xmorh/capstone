@@ -24,7 +24,7 @@ class TipoServicio(models.Model):
     descripcion = models.CharField(max_length=250, default=' ')
 
     def __str__(self):
-        return self.nombre
+        return f"Tipo Servicio ID: {self.id_tipo_servicio}, nombre: {self.nombre}, duracion: {self.duracion}, descripcion: {self.descripcion}"
     
 class Servicio(models.Model):
     id_servicio = models.AutoField(primary_key=True)

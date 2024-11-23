@@ -113,11 +113,6 @@ def infoprofesional(request):
 
 def misreservas(request):
     return render(request, 'app/usuario/misreservas.html')
-# 
-
-# haceer reserva
-
-# probando reserva por medio de calendario
 
 def calendario(request, id_servicio):
     return render(request, 'app/reservas/calendario.html', {'id_servicio': id_servicio})
@@ -182,28 +177,11 @@ def crear_evento(request):
 
     return JsonResponse(evento_data, safe=False)
 
-# def validar_disponibilidad(manicurista, fecha_hora):
-#     reservas = Reserva.objects.filter(manicurista=manicurista, fecha_hora=fecha_hora)
-#     if reservas.exists():
-#         raise ValidationError("El manicurista ya tiene una reserva en ese horario.")
+def obtener_duracion_servicio(request):
+    id_servicio = request.GET.get('id_servicio')
+    servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]
 
-# def reserva_detalle(request, reserva_id):
-#     reserva = get_object_or_404(Reserva, id=reserva_id)
-#     return render(request, 'app/usuario/reserva_detalle.html', {'reserva': reserva})
-
-
-# def reservamensual(request):
-#     is_manicurista = request.user.groups.filter(name='manicurista').exists()
-#     if is_manicurista:
-#         manicurista = Manicurista.objects.filter(user=request.user).first()
-#         if manicurista and not manicurista.state:
-#             # Redirige si el manicurista no está aprobado
-#             return redirect('espera_aprobacion') 
-#     return render(request, 'app/manicurista/reservas/reservamensual.html',{
-#         'is_manicurista': is_manicurista,
-#     })
-
-# 
+    return JsonResponse({'duracion': servicio.tipo_servicio.duracion}, safe=False)
 
 def reservamensual(request):
     is_manicurista = request.user.groups.filter(name='manicurista').exists()
