@@ -1,24 +1,29 @@
 {% extends 'app/base.html' %}
 {% block contenido %}
 
-<div class="h-full flex flex-col items-center min-h-screen bg-gray-100 p-6">
-    <h1 class="text-4xl font-bold text-gray-800 mb-4">Agendar Hora</h1>
-    <p class="text-lg text-gray-600 mb-6">Seleccione la fecha que desea</p>
-
-    <div class="w-4/5 h-64 flex-grow bg-white shadow-md rounded-lg p-4">
-        <button class="hidden" id="servicio" value="{{ id_servicio }}"></button>
-        <div id="calendar" class="h-full w-full"></div>
+<div class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
+      <div class="mb-6 text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">Reagendar tu Hora</h2>
+        <p class="text-gray-600">Selecciona una nueva fecha y hora para reagendar tu cita.</p>
+      </div>
+      <button class="hidden" id="servicio" value="{{ id_servicio }}"></button>
+      <button class="hidden" id="evento" value="{{ id_evento }}"></button>
+      <div id="calendar" class="h-auto"></div>
     </div>
 </div>
+
 <script defer>
     const eventosURL = "{% url 'eventos' %}";
     const crearEventoURL = "{% url 'crear_evento' %}";
 </script>
+
 <script defer>
     // TODO: Buscar forma de inhabilitar hora de colacion por dia, contemplar la hora al agendar y en la función agregarDiasDeshabilitados
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var id_servicio = document.getElementById('servicio').value;
+        var id_evento = document.getElementById('evento').value;
 
         function isAnOverlapEvent(eventStartDay, eventEndDay, events) {
             for (let i = 0; i < events.length; i++) {
@@ -118,7 +123,7 @@
                             const currentViewType = calendar.view.type;
 
                             if (currentViewType === 'timeGridDay') {
-                                fetch(`{% url 'crear_evento' %}?start=${info.startStr}&id_servicio=${id_servicio}`)
+                                fetch(`{% url 'reagendar_evento' %}?start=${info.startStr}&id_servicio=${id_servicio}&id_evento=${id_evento}`)
                                     .then(response => {
                                         if (!response.ok) {
                                             throw new Error('Error al cargar los eventos');
@@ -141,17 +146,5 @@
     });
 </script>
 
-
-<style>
-    .fc-disabled-day {
-        pointer-events: none;
-        /* Evita clics */
-        background-color: #f0f0f0;
-        /* Color gris */
-        color: #999;
-        /* Texto deshabilitado */
-
-    }
-</style>
 
 {% endblock %}

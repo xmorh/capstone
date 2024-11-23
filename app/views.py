@@ -112,7 +112,24 @@ def infoprofesional(request):
     return render(request, 'app/manicurista/infoprofesional.html')
 
 def misreservas(request):
-    return render(request, 'app/usuario/misreservas.html')
+    print(request.user)
+
+    eventos = Evento.objects.filter(cliente=request.user)
+
+    eventos_json = []
+    
+    for evento in eventos:
+        fecha_modificada = evento.fecha_inicio - timedelta(hours=3)
+        eventos_json.append({
+            'id': evento.id,
+            'id_servicio': evento.servicio.id_servicio,
+            'tipo': evento.servicio.tipo_servicio.nombre,
+            'duracion': evento.servicio.tipo_servicio.duracion,
+            'valor': evento.servicio.valor,
+            'cliente': evento.cliente.username,
+            'hora': fecha_modificada.strftime("%H:%M"),
+        })
+    return render(request, 'app/usuario/misreservas.html', { 'reservas': eventos_json })
 
 def calendario(request, id_servicio):
     return render(request, 'app/reservas/calendario.html', {'id_servicio': id_servicio})
@@ -145,18 +162,55 @@ def eventos(request):
 def crear_evento(request):
     
     fecha_inicio = request.GET.get('start')
-    fecha_fin = request.GET.get('end')
     id_servicio = request.GET.get('id_servicio')
 
     servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]
 
     fecha = datetime.fromisoformat(fecha_inicio)
 
-    # Sumar minutos (por ejemplo, 30 minutos)
     minutos_a_sumar = int(servicio.tipo_servicio.duracion)
     nueva_fecha = fecha + timedelta(minutes=minutos_a_sumar)
 
-    # Convertir la nueva fecha a formato ISO 8601 (si lo necesitas)
+    nueva_fecha_str = nueva_fecha.isoformat()
+
+    evento = Evento(
+        cliente=request.user,
+        fecha_inicio=parse_datetime(fecha_inicio),
+        fecha_fin=parse_datetime(nueva_fecha_str),
+        servicio=servicio,
+        manicurista=servicio.manicurista
+    )    
+
+
+    evento.save()
+
+    evento_data = {
+        'title': evento.servicio.tipo_servicio.nombre + ' ' + evento.manicurista.name,
+        'start': evento.fecha_inicio.isoformat(),
+        'end': evento.fecha_fin.isoformat(),
+    }
+
+    return JsonResponse(evento_data, safe=False)
+
+def reagendar_evento(request):
+    fecha_inicio = request.GET.get('start')
+    id_servicio = request.GET.get('id_servicio')
+    # id del evento anterior
+    id_evento = request.GET.get('id_evento')
+
+    old_evento = Evento.objects.filter(id=id_evento)
+
+    print(old_evento[0])
+
+    old_evento.delete()
+
+    servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]
+
+    fecha = datetime.fromisoformat(fecha_inicio)
+
+    minutos_a_sumar = int(servicio.tipo_servicio.duracion)
+    nueva_fecha = fecha + timedelta(minutes=minutos_a_sumar)
+
     nueva_fecha_str = nueva_fecha.isoformat()
 
     evento = Evento(
@@ -177,6 +231,7 @@ def crear_evento(request):
 
     return JsonResponse(evento_data, safe=False)
 
+
 def obtener_duracion_servicio(request):
     id_servicio = request.GET.get('id_servicio')
     servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]
@@ -194,7 +249,9 @@ def reservamensual(request):
         'is_manicurista': is_manicurista,
     })
 
-
+def reagendar(request, id_evento):
+    id_servicio = request.GET.get('servicio')
+    return render(request, 'app/reservas/reagendar.html', {'id_servicio': id_servicio, 'id_evento': id_evento})
 
 # def api_reservas(request):
 #     # Simulación de reservas (en un futuro, reemplaza con datos reales de tu modelo)
