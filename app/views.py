@@ -1,3 +1,4 @@
+from arrow import now
 from django.http import JsonResponse
 import json
 from django.shortcuts import render, redirect, get_object_or_404
@@ -274,6 +275,56 @@ def detallereserva(request):
 
 def milocal(request):
     return render(request, 'app/manicurista/informacion/milocal.html')
+
+@login_required
+@group_required('manicurista')
+def reservadia(request):
+    print('pasoo')
+    is_manicurista = request.user.groups.filter(name='manicurista').exists()
+    if is_manicurista:
+        manicurista = Manicurista.objects.filter(user=request.user).first()
+        if manicurista and not manicurista.state:
+            # Redirige si el manicurista no está aprobado
+            return redirect('espera_aprobacion') 
+    # Renderiza la página de reservas si está aprobado
+
+    manicurista = request.user.manicurista
+
+    fecha_hoy = now().date()
+    print(fecha_hoy)
+    eventos_hoy = Evento.objects.filter(
+        manicurista=manicurista,
+        fecha_inicio__date=fecha_hoy
+    )
+
+    print(eventos_hoy)
+
+    context = {
+        'evento': eventos_hoy
+    }
+
+    return render(request, 'app/manicurista/reservas/reservadia.html', {
+        'is_manicurista': is_manicurista, 
+        'manicurista': manicurista,
+        'evento': eventos_hoy,
+        'context': context
+        })
+
+@login_required
+def eventosMani(request):
+    eventos = Evento.objects.filter(manicurista=request.user.manicurista) 
+    eventos_json = []
+
+    for evento in eventos:
+        tipo_servicio = evento.servicio.tipo_servicio
+        eventos_json.append({
+            'id' : evento.id,
+            'title': tipo_servicio.nombre,
+            'start': evento.fecha_inicio.isoformat(),
+            'end': evento.fecha_fin.isoformat(),
+        })
+    
+    return JsonResponse(eventos_json, safe=False)
 
 @login_required
 @group_required('manicurista')

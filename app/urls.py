@@ -47,6 +47,9 @@ urlpatterns = [
     path('reagendarExitoso/', reagendarExitoso, name='reagendarExitoso'),
     path('horaCancelada/', horaCancelada, name='horaCancelada'),
     path('cancelarEvento/<int:id_evento>/', cancelarEvento, name='cancelarEvento'),
+    path('reservadia/', reservadia, name='reservadia'),
+    path('eventosMani/', eventosMani, name='eventosMani'),
+
     
     
 ]

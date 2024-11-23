@@ -28,12 +28,8 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
     <li>
         <a href="{% url 'misservicios' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis Servicios</a>
     </li>
-    <li>
-        <a href="{% url 'milocal' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mi Local</a>
-    </li>
     </ul>
-    </aside>
-
+</aside>
 
 <style>
     .fc-button {
@@ -52,17 +48,25 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
         font-weight: bold;
         font-size: 1.125rem; /* Tamaño de texto */
     }
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        font-size: 14px;
+      }
+    
+      #calendar {
+        max-width: 1000px;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        margin-top: 20px;
+      }
 </style>
 
-<div class="w-full h-screen">
-    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Reservas del Mes</h2>
-    <div class="flex items-center justify-center py-10">
-        <div class="max-w-5xl w-full bg-white rounded-lg shadow-lg p-6">
-            <!-- Contenedor del Calendario -->
-            <div id="calendar" class="w-full h-[700px]"></div>
-        </div>
-    </div>
-</div>
+<h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Reservas del Mes </h2>
+
+<div id="calendar" class="w-full h-[500px]"></div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -75,10 +79,18 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
-            events: '/api/reservas-falsas/', // Ruta para eventos
+            events: 
+            '{% url "eventosMani" %}' ,
+
+            eventClick: function(info) {
+                // Aquí rediriges a la página de detalles del evento
+                const eventId = info.event.id; // ID del evento
+                // Por ejemplo, redirigir a una vista de detalles del evento
+                window.location.href = '/detallereserva/' + eventId + '/'; 
+            }
         });
         calendar.render();
     });
 </script>
 
-{% endblock %}
+{% endblock %}
