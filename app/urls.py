@@ -45,6 +45,8 @@ urlpatterns = [
     path('obtener_duracion_servicio/', obtener_duracion_servicio, name='obtener_duracion_servicio'),
     path('horaAgendada/', horaAgendada, name='horaAgendada'),
     path('reagendarExitoso/', reagendarExitoso, name='reagendarExitoso'),
+    path('horaCancelada/', horaCancelada, name='horaCancelada'),
+    path('cancelarEvento/<int:id_evento>/', cancelarEvento, name='cancelarEvento'),
     
     
 ]

@@ -231,6 +231,17 @@ def reagendar_evento(request):
 
     return JsonResponse(evento_data, safe=False)
 
+def cancelarEvento(request, id_evento):
+
+    old_evento = Evento.objects.filter(id=id_evento)
+
+    old_evento.delete()
+
+    return redirect('horaCancelada')
+
+def horaCancelada(request):
+    return render(request, 'app/reservas/horaCancelada.html')
+
 def obtener_duracion_servicio(request):
     id_servicio = request.GET.get('id_servicio')
     servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]

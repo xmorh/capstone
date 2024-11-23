@@ -31,8 +31,11 @@
                         <td class="py-3 px-4">{{ reserva.fecha }}</td>
                         <td class="py-3 px-4">{{ reserva.hora }}hrs.</td>
                         <td class="py-3 px-4 text-center">
-                            <a href="{% url 'reagendar' reserva.id %}?servicio={{ reserva.id_servicio }}" class="inline-block text-white font-semibold py-3 px-6 rounded-lg bg-[#FF1493] hover:bg-pink-500 transition duration-300 shadow ">
+                            <a href="{% url 'reagendar' reserva.id %}?servicio={{ reserva.id_servicio }}" class="inline-block text-white font-semibold py-1 px-6 rounded-lg bg-[#FF1493] hover:bg-pink-500 transition duration-300 shadow ">
                                 Reagendar
+                            </a>
+                            <a href="{% url 'cancelarEvento' reserva.id %}" class="inline-block text-white font-semibold py-1 mt-2 px-6 rounded-lg bg-red-600 hover:bg-pink-500 transition duration-300 shadow ">
+                                Cancelar
                             </a>
                         </td>
                     </tr>
