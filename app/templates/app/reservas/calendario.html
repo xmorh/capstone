@@ -11,12 +11,19 @@
 </div>
 
 <script>
+    // TODO: Buscar forma de inhabilitar hora de colacion por dia, contemplar la hora al agendar y en la función agregarDiasDeshabilitados
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
 
+        var disabledDays = ['2024-11-23','2024-11-25'];
+
+        function agregarDiasDeshabilitados(eventos) { // data debe ser la lista de eventos del mes
+            // recorrer eventos por dia y ver si hay horas disponibles y guardarlos en disabledDays
+        }
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth', // Vista inicial
-            locale: 'es', // Cambiar al idioma español
+            initialView: 'dayGridMonth',
+            locale: 'es', 
             headerToolbar: {
                 left: 'prev,next',
                 center: 'title',
@@ -29,18 +36,39 @@
                 day: 'Día',
                 list: 'Lista'
             },
-            events: '/api/eventos/', // API o ruta para cargar eventos si es necesario
+            // events: '{% url "eventos" %}', // API o ruta para cargar eventos si es necesario no la esta llamando 
+            events: function(fetchInfo, successCallback, failureCallback) {
+                // Usar Fetch API para cargar eventos desde el servidor
+                fetch(`{% url 'eventos' %}?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al cargar los eventos');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        agregarDiasDeshabilitados(data);
+                        successCallback(data); // Pasar eventos al calendario
+                    })
+            },
             dateClick: function (info) {
+                // Evitar clic en días deshabilitados
+                if (disabledDays.includes(info.dateStr)) {
+                    return;
+                }
+
                 // Cambiar a la vista de horarios del día seleccionado
                 calendar.changeView('timeGridDay', info.dateStr);
             },
             // Permitir selección de horarios
             selectable: true,
+            allDaySlot: false,
             select: function (info) {
-                // Verificar si la vista activa es de horario
+
                 const currentView = calendar.view.type;
 
-                if (currentView === 'timeGridDay' || currentView === 'timeGridWeek') {
+                if (currentView === 'timeGridDay') {
                     
                     const selectedDate = new Date(info.start);
 
@@ -53,17 +81,36 @@
                     console.log('No se seleccionó una hora específica.');
                 }
             },
-            // Opcional: Configurar un rango de tiempo en la vista diaria
+            
+            datesSet: function(info) {
+                console.log("Mostrando eventos para el rango:", info.startStr, "a", info.endStr);
+                // Aplicar estilos a los días deshabilitados
+                disabledDays.forEach(date => {
+                    let dayCell = document.querySelector(`[data-date="${date}"]`);
+                    if (dayCell) {
+                        dayCell.classList.add('fc-disabled-day');
+                    }
+                });
+            },
             slotDuration: '00:30:00',
             slotMinTime: '09:00:00',
             slotMaxTime: '19:00:00',
             validRange: {
                 start: new Date().toISOString().slice(0, 10) // Establece la fecha de hoy como el inicio
-            }
+            },
         });
 
         calendar.render();
     });
 </script>
+
+<style>
+    .fc-disabled-day {
+        pointer-events: none; /* Evita clics */
+        background-color: #f0f0f0; /* Color gris */
+        color: #999; /* Texto deshabilitado */
+        
+    }
+</style>
 
 {% endblock %}

@@ -13,7 +13,7 @@ from django.views import View
 from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm, ReservaForm
 from django.views.generic import ListView
 from .models import Manicurista, TipoServicio, Servicio, Reserva, Evento
-
+from datetime import timedelta
 
 # Create your views here.
 
@@ -159,59 +159,34 @@ def hacer_reserva(request, servicio_id):
 
 def calendario(request, id_servicio):
     return render(request, 'app/reservas/calendario.html', {'id_servicio': id_servicio})
-
-# def obtener_eventos(request):
-#     # Obtener los parámetros de la solicitud
-#     fecha_inicio = request.GET.get('start')
-#     fecha_fin = request.GET.get('end')
-#     id_servicio = request.GET.get('id_servicio')
-
-#     if not fecha_inicio or not fecha_fin or not id_servicio:
-#         return JsonResponse({'error': 'Faltan parámetros'}, status=400)
-
-#     # Parsear las fechas recibidas
-#     fecha_inicio = parse_datetime(fecha_inicio)
-#     fecha_fin = parse_datetime(fecha_fin)
-
-#     # Filtrar eventos por rango de fechas y servicio
-#     eventos = Evento.objects.filter(servicio_id=id_servicio, inicio__range=[fecha_inicio, fecha_fin])
-
-#     # Crear la lista de eventos
-#     eventos_json = []
-#     for evento in eventos:
-#         eventos_json.append({
-#             'id': evento.id,
-#             'title': evento.titulo,
-#             'start': evento.inicio.isoformat(),
-#             'end': evento.fin.isoformat() if evento.fin else evento.inicio.isoformat(),  # Aquí se maneja el evento sin fin
-#             'description': evento.descripcion,
-#             'manicurista': evento.manicurista.name if evento.manicurista else '',
-#             'cliente': evento.cliente.username,
-#         })
-
-#     return JsonResponse(eventos_json, safe=False)
-# 
     
 def eventos(request):
     # Ejemplo: Cargar horarios disponibles para un servicio
-    eventos = [
-        {
-            'title': 'Horario disponible',
-            'start': '2024-11-20T09:00:00',
-            'end': '2024-11-20T10:00:00',
-            'url': '/reservar/1/'
-        },
-        {
-            'title': 'Horario disponible',
-            'start': '2024-11-20T10:30:00',
-            'end': '2024-11-20T11:30:00',
-            'url': '/reservar/2/'
-        }
-    ]
-    return JsonResponse(eventos, safe=False)
+    fecha_inicio = request.GET.get('start')
+    fecha_fin = request.GET.get('end')
 
+    if not fecha_inicio or not fecha_fin:
+        return JsonResponse({'error': 'Faltan parámetros'}, status=400)
 
-# 
+#     # Parsear las fechas recibidas
+    fecha_inicio = parse_datetime(fecha_inicio)
+    fecha_fin = parse_datetime(fecha_fin)
+
+    eventos = Evento.objects.filter(fecha_inicio__range=[fecha_inicio, fecha_fin])
+
+    # Crear la lista de eventos
+    eventos_json = []
+    
+    for evento in eventos:
+        eventos_json.append({
+            'title': evento.servicio.tipo_servicio.nombre + ' ' + evento.manicurista.name,
+            'start': (evento.fecha_inicio + timedelta(hours=3)).isoformat(),
+            'end': (evento.fecha_fin + timedelta(hours=3)).isoformat(),
+            # 'start': evento.fecha_inicio.isoformat(),
+            # 'end': evento.fecha_fin.isoformat(),
+        })
+    print(eventos_json)
+    return JsonResponse(eventos_json, safe=False)
 
 # def validar_disponibilidad(manicurista, fecha_hora):
 #     reservas = Reserva.objects.filter(manicurista=manicurista, fecha_hora=fecha_hora)

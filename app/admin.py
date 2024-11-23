@@ -19,9 +19,9 @@ class TipoServicioAdmin(admin.ModelAdmin):
     list_filter = ('nombre',)
 
 class EventoAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'cliente', 'servicio', 'manicurista', 'inicio', 'fin', 'descripcion')
-    list_filter = ('inicio', 'manicurista')
-    search_fields = ('titulo', 'descripcion')
+    list_display = ('cliente', 'servicio', 'manicurista', 'fecha_inicio', 'fecha_fin',)
+    list_filter = ('fecha_inicio', 'manicurista')
+    search_fields = ('fecha_inicio','manicurista')
     list_per_page = 10
 
 admin.site.register(Reserva)
