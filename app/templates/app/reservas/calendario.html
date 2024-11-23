@@ -20,23 +20,22 @@ const crearEventoURL = "{% url 'crear_evento' %}";
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
     var id_servicio = document.getElementById('servicio').value;
-    var disabledDays = []; // Lista de días deshabilitados
-    var occupiedSlots = {}; // Objeto para almacenar horarios ocupados por día
+    var disabledDays = []; 
+    var occupiedSlots = {}; 
 
-    // Lógica para agregar los días ocupados
     function agregarDiasDeshabilitados(eventos) {
         eventos.forEach(event => {
-            const eventDate = event.start.slice(0, 10);  // Fecha en formato YYYY-MM-DD
+            const eventDate = event.start.slice(0, 10);  
     
-            // Inicializa el contador de eventos para la fecha
+            
             if (!occupiedSlots[eventDate]) {
                 occupiedSlots[eventDate] = [];
             }
-            occupiedSlots[eventDate].push(event.start.slice(11, 16));  // Almacenar los horarios ocupados
+            occupiedSlots[eventDate].push(event.start.slice(11, 16));  
     
-            // Verifica cuántos eventos hay en ese día
+            
             if (occupiedSlots[eventDate].length >= 5 && !disabledDays.includes(eventDate)) {
-                disabledDays.push(eventDate);  // Marcar el día como deshabilitado si tiene 3 o más eventos
+                disabledDays.push(eventDate);  
             }
         });
         
@@ -66,20 +65,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                agregarDiasDeshabilitados(data);  // Actualiza días deshabilitados
+                agregarDiasDeshabilitados(data);  
                 successCallback(data);
             });
     },
         datesSet: function (info) {
-        // Aplicar clase a los días deshabilitados
         aplicarDiasDeshabilitados();
     },
         eventsSet: function (events) {
-        // Aplicar clase a los días deshabilitados después de cargar eventos
         aplicarDiasDeshabilitados();
     },
         dateClick: function (info) {
-        // Si el día está deshabilitado, no permitir la selección
         if (disabledDays.includes(info.dateStr)) {
             alert('Este día ya no cuenta con más horas.');
             return;
@@ -89,10 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
         selectable: true,
         allDaySlot: false,
         select: function (info) {
-        const startTime = info.startStr.slice(11, 16); // Extraer solo la hora
+        const startTime = info.startStr.slice(11, 16); 
         const endTime = info.endStr.slice(11, 16);
 
-        // Verificar si el horario ya está ocupado
         const selectedDate = info.startStr.slice(0, 10);
         if (occupiedSlots[selectedDate] && occupiedSlots[selectedDate].includes(startTime)) {
             alert("Esta hora ya está ocupada.");
@@ -108,22 +103,20 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 calendar.addEvent(data);
-                // Añadir el nuevo slot ocupado
                 if (!occupiedSlots[selectedDate]) {
                     occupiedSlots[selectedDate] = [];
                 }
-                occupiedSlots[selectedDate].push(startTime); // Agregar la hora ocupada
+                occupiedSlots[selectedDate].push(startTime); 
             });
     },
     slotDuration: '00:30:00',
-    slotMinTime: '09:00:00', // 9 AM
-    slotMaxTime: '19:00:00', // 7 PM
+    slotMinTime: '09:00:00',
+    slotMaxTime: '19:00:00', 
     validRange: {
-        start: new Date().toISOString().slice(0, 10) // Solo días a partir de hoy
+        start: new Date().toISOString().slice(0, 10)
     },
 });
 
-// Función para aplicar clases a los días deshabilitados
     function aplicarDiasDeshabilitados() {
     disabledDays.forEach(date => {
         let dayCell = document.querySelector(`[data-date="${date}"]`);

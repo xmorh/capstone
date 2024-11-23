@@ -95,3 +95,8 @@ class ActualizarCertificacionForm(forms.ModelForm):
     class Meta:
         model = Manicurista
         fields = ['certifications'] 
+
+class ManicuristaForm(forms.ModelForm):
+    class Meta:
+        model = Manicurista
+        fields = ['name', 'rut', 'profile_picture',]

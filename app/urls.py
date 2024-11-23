@@ -45,6 +45,8 @@ urlpatterns = [
     path('eventos/', eventos, name='eventos'),
     path('crear_evento/', crear_evento, name='crear_evento'),
     # path('obtener_eventos/', obtener_eventos, name='obtener_eventos'),
+    path('btnCancelar/<id>/', btnCancelar, name='btnCancelar'), 
+    path('/editardatos/<id>', editardatos, name='editardatos'),
     
 ]
 

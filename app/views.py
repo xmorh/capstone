@@ -11,11 +11,12 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 from django.views import View
-from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm
+from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ManicuristaForm
 from django.views.generic import ListView
 from .models import Manicurista, TipoServicio, Servicio, Reserva, Evento
 from datetime import datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.timezone import now
 # Create your views here.
 
 # limitamos el acceso segun el rol
@@ -272,8 +273,17 @@ def misdatos(request):
         if manicurista and not manicurista.state:
             return redirect('espera_aprobacion')
         
-    user = request.user
-    return render(request, 'app/manicurista/informacion/misdatos.html', {'user': user})
+    manicurista = request.user.manicurista
+
+    # Suponiendo que tienes un modelo extendido o información adicional en otro modelo
+    # por ejemplo: usuario.manicurista
+    context = {
+        'manicurista': manicurista,  # Cambia esto según tu modelo o lógica
+    }
+
+    return render(request, 'app/manicurista/informacion/misdatos.html', {'is_manicurista': is_manicurista, 
+        'manicurista': manicurista,
+        'context': context})
 
 # Servicios
 
@@ -444,8 +454,25 @@ def reservasdia(request):
             # Redirige si el manicurista no está aprobado
             return redirect('espera_aprobacion') 
     # Renderiza la página de reservas si está aprobado
+
+    manicurista = request.user.manicurista
+
+    fecha_hoy = now().date()
+
+    eventos_hoy = Evento.objects.filter(
+        manicurista=manicurista,
+        fecha_inicio__date=fecha_hoy
+    )
+
+    context = {
+        'evento': eventos_hoy
+    }
+
     return render(request, 'app/manicurista/reservas/reservadia.html', {
-        'is_manicurista': is_manicurista,
+        'is_manicurista': is_manicurista, 
+        'manicurista': manicurista,
+        'evento': eventos_hoy,
+        'context': context
     })
 
 @login_required
@@ -593,3 +620,22 @@ def reserServ (request):
         'servicio': servicio,
     }
     return render(request, 'app/reserServ.html', data)
+
+# cancelar hora Manicurista
+def btnCancelar(request, id):
+    evento = get_object_or_404(Evento, id=id)
+    evento.delete()
+    return redirect(to="reservasdia")
+
+# editar mis datos
+def editardatos(request, id):
+    manicurista = get_object_or_404(Manicurista, id=id)
+
+    if request.method == "POST":
+        form = ManicuristaForm(request.POST, request.FILES, instance=manicurista)
+        if form.is_valid():
+            form.save()
+            return redirect('misdatos')  # Redirigir después de guardar
+    else:
+        form = ManicuristaForm(instance=manicurista)
+    return render(request, 'app/manicurista/informacion/editardatos.html', {'form': form, 'manicurista': manicurista})

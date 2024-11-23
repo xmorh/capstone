@@ -52,32 +52,20 @@ class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x
                     </tr>
                 </thead>
                 <tbody>
+                {% for e in evento %}
                     <tr class="bg-transparent text-black">
-                        <td class="py-3 px-4">Manicure Completa</td>
-                        <td class="py-3 px-4">1 hora</td>
-                        <td class="py-3 px-4">$25.000</td>
-                        <td class="py-3 px-4">María Pérez</td>
-                        <td class="py-3 px-4">10:00 AM</td>
+                        <td class="py-3 px-4"> {{ e.servicio.tipo_servicio }} </td>
+                        <td class="py-3 px-4"> {{ e.servicio.tipo_servicio.duracion }} </td>
+                        <td class="py-3 px-4"> {{e.servicio.valor }} </td>
+                        <td class="py-3 px-4"> {{ e.cliente }} </td>
+                        <td class="py-3 px-4"> {{ e.fecha_inicio }} </td>
                         <td class="py-3 px-4 text-center">
-                            <button
-                                class="bg-[#DA0000] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
-                                Cancelar
-                            </button>
+                            <a href="{% url 'btnCancelar' e.id %}"
+                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</a>
+                            
                         </td>
                     </tr>
-                    <tr class="bg-transparent text-black">
-                        <td class="py-3 px-4">Manicure Express</td>
-                        <td class="py-3 px-4">30 minutos</td>
-                        <td class="py-3 px-4">$15.000</td>
-                        <td class="py-3 px-4">Ana López</td>
-                        <td class="py-3 px-4">11:30 AM</td>
-                        <td class="py-3 px-4 text-center">
-                            <button
-                                class="bg-[#DA0000] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300">
-                                Cancelar
-                            </button>
-                        </td>
-                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
