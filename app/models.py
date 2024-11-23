@@ -33,7 +33,7 @@ class Servicio(models.Model):
     manicurista = models.ForeignKey('Manicurista', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return str(self.id_servicio)
+        return f"Servicio ID: {self.id_servicio}, Valor: {self.valor}, Tipo: {self.tipo_servicio}, Manicurista: {self.manicurista}"
 
 class Manicurista(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -46,7 +46,11 @@ class Manicurista(models.Model):
     certificado_actualizado = models.BooleanField(default=False) 
 
     def __str__(self):
-        return self.name
+        return f"User: {self.user.username}, Name: {self.name}, RUT: {self.rut}, " \
+               f"Profile Picture: {self.profile_picture.url if self.profile_picture else 'No picture'}, " \
+               f"Certifications: {self.certifications.url if self.certifications else 'No certifications'}, " \
+               f"State: {'Active' if self.state else 'Inactive'}, Motivo de Rechazo: {self.motivo_rechazo or 'No reason'}, " \
+               f"Certificado Actualizado: {'Yes' if self.certificado_actualizado else 'No'}"
     
 
 # para reservas eventos
@@ -54,11 +58,9 @@ class Evento(models.Model):
     cliente = models.ForeignKey(User, on_delete=models.CASCADE)
     servicio = models.ForeignKey('Servicio', on_delete=models.CASCADE)
     manicurista = models.ForeignKey('Manicurista', on_delete=models.CASCADE, null=True, blank=True)
-    # titulo = models.CharField(max_length=200) 
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField(null=True, blank=True)
-    # descripcion = models.TextField(null=True, blank=True)
     
     def __str__(self):
-        return f"Evento #{self.id}"
+        return f"Evento #{self.id} - Cliente: {self.cliente} - Servicio: {self.servicio} - Manicurista: {self.manicurista} - Fecha de inicio: {self.fecha_inicio}"
 

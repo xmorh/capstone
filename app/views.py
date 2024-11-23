@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -10,11 +11,11 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 from django.views import View
-from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm, ActualizarCertificacionForm, ReservaForm
+from .forms import RegistroClienteForm, RegistroManicuristaForm, ServicioForm, TipoServicioForm
 from django.views.generic import ListView
 from .models import Manicurista, TipoServicio, Servicio, Reserva, Evento
-from datetime import timedelta
-
+from datetime import datetime, timedelta
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 # limitamos el acceso segun el rol
@@ -116,45 +117,6 @@ def misreservas(request):
 
 # haceer reserva
 
-@login_required
-def hacer_reserva(request, servicio_id):
-    servicio = get_object_or_404(Servicio, id_servicio=servicio_id)
-    manicurista = servicio.manicurista
-    horas_disponibles = []  # Lista de horas disponibles para el manicurista
-    
-    # Obtén las horas disponibles (esto depende de la lógica que implementes para manejar la disponibilidad)
-    # Aquí hay un ejemplo básico de cómo podrías hacerlo. Suponiendo que el manicurista tiene un horario fijo:
-    current_time = timezone.now()
-    
-    # Asegúrate de que el manicurista tiene horas disponibles.
-    for i in range(8, 18):  # Ejemplo: 8 AM a 6 PM
-        horas_disponibles.append(current_time.replace(hour=i, minute=0, second=0, microsecond=0))
-    
-    if request.method == 'POST':
-        # Verificamos si el formulario contiene la hora seleccionada
-        if 'hora_reserva' in request.POST:
-            hora_reserva = request.POST.get('hora_reserva')
-            # Mostrar la página de confirmación con la hora seleccionada
-            return render(request, 'app/usuario/confirmar_reserva.html', {
-                'hora_reserva': hora_reserva,
-                'servicio': servicio,
-                'manicurista': manicurista
-            })
-        
-        # Si el usuario confirma la reserva, la guardamos en la base de datos
-        if 'confirmar_reserva' in request.POST:
-            hora_reserva = request.POST.get('hora_reserva')
-            reserva = Reserva.objects.create(
-                cliente=request.user,
-                servicio=servicio,
-                manicurista=manicurista,
-                fecha_hora=hora_reserva,  # Usamos la hora seleccionada
-                estado='pendiente',
-            )
-            return redirect('reserva_detalle', reserva_id=reserva.id)
-    
-    return render(request, 'app/reservar.html', {'servicio': servicio, 'horas_disponibles': horas_disponibles})
-
 # probando reserva por medio de calendario
 
 def calendario(request, id_servicio):
@@ -180,13 +142,47 @@ def eventos(request):
     for evento in eventos:
         eventos_json.append({
             'title': evento.servicio.tipo_servicio.nombre + ' ' + evento.manicurista.name,
-            'start': (evento.fecha_inicio + timedelta(hours=3)).isoformat(),
-            'end': (evento.fecha_fin + timedelta(hours=3)).isoformat(),
-            # 'start': evento.fecha_inicio.isoformat(),
-            # 'end': evento.fecha_fin.isoformat(),
+            'start': evento.fecha_inicio.isoformat(),
+            'end': evento.fecha_fin.isoformat(),
         })
-    print(eventos_json)
     return JsonResponse(eventos_json, safe=False)
+
+def crear_evento(request):
+    
+    fecha_inicio = request.GET.get('start')
+    fecha_fin = request.GET.get('end')
+    id_servicio = request.GET.get('id_servicio')
+
+    servicio = Servicio.objects.filter(id_servicio=id_servicio)[0]
+
+    fecha = datetime.fromisoformat(fecha_inicio)
+
+    # Sumar minutos (por ejemplo, 30 minutos)
+    minutos_a_sumar = int(servicio.tipo_servicio.duracion)
+    nueva_fecha = fecha + timedelta(minutes=minutos_a_sumar)
+
+    # Convertir la nueva fecha a formato ISO 8601 (si lo necesitas)
+    nueva_fecha_str = nueva_fecha.isoformat()
+
+    evento = Evento(
+        cliente=request.user,
+        fecha_inicio=parse_datetime(fecha_inicio),
+        fecha_fin=parse_datetime(nueva_fecha_str),
+        servicio=servicio,
+        manicurista=servicio.manicurista
+    )    
+
+    evento.save()
+
+    evento_data = {
+        'title': evento.servicio.tipo_servicio.nombre + ' ' + evento.manicurista.name,
+        'start': evento.fecha_inicio.isoformat(),
+        'end': evento.fecha_fin.isoformat(),
+    }
+
+    print(evento_data)
+
+    return JsonResponse(evento_data, safe=False)
 
 # def validar_disponibilidad(manicurista, fecha_hora):
 #     reservas = Reserva.objects.filter(manicurista=manicurista, fecha_hora=fecha_hora)
