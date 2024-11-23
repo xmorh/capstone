@@ -34,7 +34,7 @@ urlpatterns = [
     path('modificarserv/<id_tipo_servicio>/', modificarserv, name='modificarserv'),
     # 
     path('reservamensual', reservamensual, name='reservamensual'), 
-    path('detallereserva', detallereserva, name='detallereserva'),
+    path('detallereserva/<int:event_id>/', detallereserva, name='detallereserva'),
     path('calendario/', CalendarioView.as_view(), name='calendario'),
     path('reserServ/', reserServ, name='reserServ'),
     path('reserva/<int:id_servicio>/', calendario, name='calendario'),
@@ -47,7 +47,7 @@ urlpatterns = [
     path('reagendarExitoso/', reagendarExitoso, name='reagendarExitoso'),
     path('horaCancelada/', horaCancelada, name='horaCancelada'),
     path('cancelarEvento/<int:id_evento>/', cancelarEvento, name='cancelarEvento'),
-    path('reservadia/', reservadia, name='reservadia'),
+    path('reservasdia/', reservasdia, name='reservasdia'),
     path('eventosMani/', eventosMani, name='eventosMani'),
 
     

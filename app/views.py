@@ -270,15 +270,18 @@ def reagendar(request, id_evento):
     id_servicio = request.GET.get('servicio')
     return render(request, 'app/reservas/reagendar.html', {'id_servicio': id_servicio, 'id_evento': id_evento})
 
-def detallereserva(request):
-    return render(request, 'app/manicurista/reservas/detallereserva.html')
 
 def milocal(request):
     return render(request, 'app/manicurista/informacion/milocal.html')
 
+def detallereserva(request, event_id):
+    evento = get_object_or_404(Evento, id=event_id)
+
+    return render(request, 'app/manicurista/reservas/detallereserva.html', {'evento': evento})
+
 @login_required
 @group_required('manicurista')
-def reservadia(request):
+def reservasdia(request):
     print('pasoo')
     is_manicurista = request.user.groups.filter(name='manicurista').exists()
     if is_manicurista:
@@ -309,6 +312,7 @@ def reservadia(request):
         'evento': eventos_hoy,
         'context': context
         })
+
 
 @login_required
 def eventosMani(request):
@@ -497,19 +501,6 @@ def homecliente(request):
     })
 
 
-@login_required
-@group_required('manicurista')
-def reservasdia(request):
-    is_manicurista = request.user.groups.filter(name='manicurista').exists()
-    if is_manicurista:
-        manicurista = Manicurista.objects.filter(user=request.user).first()
-        if manicurista and not manicurista.state:
-            # Redirige si el manicurista no está aprobado
-            return redirect('espera_aprobacion') 
-    # Renderiza la página de reservas si está aprobado
-    return render(request, 'app/manicurista/reservas/reservadia.html', {
-        'is_manicurista': is_manicurista,
-    })
 
 @login_required
 @group_required('admin')
