@@ -180,8 +180,6 @@ def crear_evento(request):
         'end': evento.fecha_fin.isoformat(),
     }
 
-    print(evento_data)
-
     return JsonResponse(evento_data, safe=False)
 
 # def validar_disponibilidad(manicurista, fecha_hora):

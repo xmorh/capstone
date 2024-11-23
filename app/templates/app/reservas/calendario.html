@@ -6,40 +6,72 @@
     <p class="text-lg text-gray-600 mb-6">Seleccione la fecha que desea</p>
 
     <div class="w-4/5 h-64 flex-grow bg-white shadow-md rounded-lg p-4">
+        <button class="hidden" id="servicio" value="{{ id_servicio }}"></button>
         <div id="calendar" class="h-full w-full"></div>
     </div>
 </div>
+<script defer>
+const eventosURL = "{% url 'eventos' %}";
+const crearEventoURL = "{% url 'crear_evento' %}";
+</script>
+<script defer>
+// TODO: Buscar forma de inhabilitar hora de colacion por dia, contemplar la hora al agendar y en la función agregarDiasDeshabilitados
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var id_servicio = document.getElementById('servicio').value;
 
-<script>
-    // TODO: Buscar forma de inhabilitar hora de colacion por dia, contemplar la hora al agendar y en la función agregarDiasDeshabilitados
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
+    var disabledDays = ['2024-11-23', '2024-11-25'];
 
-        var disabledDays = ['2024-11-23','2024-11-25'];
+    function agregarDiasDeshabilitados(eventos) { // data debe ser la lista de eventos del mes
+        // recorrer eventos por dia y ver si hay horas disponibles y guardarlos en disabledDays
+    }
 
-        function agregarDiasDeshabilitados(eventos) { // data debe ser la lista de eventos del mes
-            // recorrer eventos por dia y ver si hay horas disponibles y guardarlos en disabledDays
-        }
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        headerToolbar: {
+            left: 'prev,next',
+            center: 'title',
+            right: 'dayGridMonth,timeGridDay'
+        },
+        buttonText: {
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día',
+            list: 'Lista'
+        },
+        events: function (fetchInfo, successCallback, failureCallback) {
+            // Usar Fetch API para cargar eventos desde el servidor
+            fetch(`${eventosURL}?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar los eventos');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    successCallback(data); // Pasar eventos al calendario
+                });
+        },
+        dateClick: function (info) {
+            // Evitar clic en días deshabilitados
+            if (disabledDays.includes(info.dateStr)) {
+                return;
+            }
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es', 
-            headerToolbar: {
-                left: 'prev,next',
-                center: 'title',
-                right: 'dayGridMonth,timeGridDay'
-            },
-            buttonText: {
-                today: 'Hoy',
-                month: 'Mes',
-                week: 'Semana',
-                day: 'Día',
-                list: 'Lista'
-            },
-            // events: '{% url "eventos" %}', // API o ruta para cargar eventos si es necesario no la esta llamando 
-            events: function(fetchInfo, successCallback, failureCallback) {
-                // Usar Fetch API para cargar eventos desde el servidor
-                fetch(`{% url 'eventos' %}?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+            // Cambiar a la vista de horarios del día seleccionado
+            calendar.changeView('timeGridDay', info.dateStr);
+        },
+        // Permitir selección de horarios
+        selectable: true,
+        allDaySlot: false,
+        select: function (info) {
+
+            const currentView = calendar.view.type;
+
+            if (currentView === 'timeGridDay') {
+                fetch(`{% url 'crear_evento' %}?start=${info.startStr}&end=${info.endStr}&id_servicio=${id_servicio}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Error al cargar los eventos');
@@ -47,62 +79,36 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
-                        agregarDiasDeshabilitados(data);
-                        successCallback(data); // Pasar eventos al calendario
-                    })
-            },
-            dateClick: function (info) {
-                // Evitar clic en días deshabilitados
-                if (disabledDays.includes(info.dateStr)) {
-                    return;
+                        calendar.addEvent(data);
+                        // Pasar eventos al calendario
+                    });
+            } else {
+                console.log('No se seleccionó una hora específica.');
+            }
+        },
+
+        datesSet: function (info) { // AUN NO ESTA COMPLETO
+            // Aplicar estilos a los días deshabilitados
+            disabledDays.forEach(date => {
+                let dayCell = document.querySelector(`[data-date="${date}"]`);
+                if (dayCell) {
+                    dayCell.classList.add('fc-disabled-day');
                 }
-
-                // Cambiar a la vista de horarios del día seleccionado
-                calendar.changeView('timeGridDay', info.dateStr);
-            },
-            // Permitir selección de horarios
-            selectable: true,
-            allDaySlot: false,
-            select: function (info) {
-
-                const currentView = calendar.view.type;
-
-                if (currentView === 'timeGridDay') {
-                    
-                    const selectedDate = new Date(info.start);
-
-                    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-                    const localTime = selectedDate.toLocaleTimeString('es-CL', options);
-
-                    alert(`Has seleccionado el horario: ${localTime}`);
-                } else {
-                    // ignora las selecciones en vistas que no sean de horario
-                    console.log('No se seleccionó una hora específica.');
-                }
-            },
-            
-            datesSet: function(info) {
-                console.log("Mostrando eventos para el rango:", info.startStr, "a", info.endStr);
-                // Aplicar estilos a los días deshabilitados
-                disabledDays.forEach(date => {
-                    let dayCell = document.querySelector(`[data-date="${date}"]`);
-                    if (dayCell) {
-                        dayCell.classList.add('fc-disabled-day');
-                    }
-                });
-            },
-            slotDuration: '00:30:00',
-            slotMinTime: '09:00:00',
-            slotMaxTime: '19:00:00',
-            validRange: {
-                start: new Date().toISOString().slice(0, 10) // Establece la fecha de hoy como el inicio
-            },
-        });
-
-        calendar.render();
+            });
+        },
+        slotDuration: '00:30:00',
+        slotMinTime: '09:00:00',
+        slotMaxTime: '19:00:00',
+        validRange: {
+            start: new Date().toISOString().slice(0, 10) // Establece la fecha de hoy como el inicio
+        },
     });
+
+    calendar.render();
+});
+
 </script>
+
 
 <style>
     .fc-disabled-day {
