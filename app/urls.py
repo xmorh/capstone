@@ -51,7 +51,7 @@ urlpatterns = [
     path('eventosMani/', eventosMani, name='eventosMani'),
     path('local/', local, name='local'),
     path('editarlocal/<id_local>', editarLocal, name='editarlocal'),
-    path('/editardatos/<id>', editardatos, name='editardatos'),
+    path('editardatos/<id>', editardatos, name='editardatos'),
 
 
     
