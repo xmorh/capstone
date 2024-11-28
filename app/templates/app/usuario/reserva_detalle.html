@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+{% block contenido %}
+<div class="container mx-auto py-10 px-6 bg-white rounded-lg shadow-lg h-screen">
+    <h2 class="text-3xl font-bold text-center mb-8 text-[#FF1493]">Confirmar Reserva</h2>
+
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+        <p class="text-lg font-semibold text-gray-700 mb-2">
+            <span class="text-[#FF1493]">Cliente:</span> {{ request.user.username }}
+        </p>
+        <p class="text-lg font-semibold text-gray-700 mb-2">
+            <span class="text-[#FF1493]">Servicio:</span> {{ servicio.nombre }}
+        </p>
+        <p class="text-lg font-semibold text-gray-700 mb-2">
+            <span class="text-[#FF1493]">Manicurista:</span> {{ manicurista.username }}
+        </p>
+        <p class="text-lg font-semibold text-gray-700 mb-2">
+            <span class="text-[#FF1493]">Hora seleccionada:</span> {{ hora_reserva|date:"H:i" }}
+        </p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="hora_reserva" value="{{ hora_reserva }}">
+            <button type="submit" name="confirmar_reserva" class="bg-[#FF1493] text-white py-2 px-4 rounded-lg hover:bg-[#ff66b2] focus:outline-none">
+                Confirmar Reserva
+            </button>
+        </form>
+    </div>
+
+    <!-- Botón para volver a la página anterior sin confirmar -->
+    <div class="mt-6 text-center">
+        <button onclick="window.history.back();" class="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-400 focus:outline-none">
+            Volver
+        </button>
+    </div>
+</div>
+{% endblock %}

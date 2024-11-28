@@ -1,9 +1,9 @@
-
 {% extends 'app/base.html' %}
 {% load static %}
+{% load humanize %}
 {% block contenido %}
-<div class="bg-gray-100">
-    
+<div class="min-h-screen bg-gray-100">
+
 
     <!-- Banner -->
     <div class="relative h-96">
@@ -11,86 +11,44 @@
             class="absolute inset-0 w-full h-full object-cover">
         <!-- Texto centrado -->
         <div class="absolute inset-0 flex items-center justify-center">
-            <h2 class="text-4xl text-white font-bold bg-black bg-opacity-50 p-4 rounded-xl">Descubre el poder de tus manos con nosotros
+            <h2 class="text-4xl text-white font-bold bg-black bg-opacity-50 p-4 rounded-xl">Descubre el poder de tus
+                manos con nosotros
             </h2>
         </div>
     </div>
 
-    <!-- Servicios Section -->
     <section class="container mx-auto py-12">
-        <!-- Categorías -->
         <div class="flex justify-center space-x-4 mb-8">
-            <button class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Clásicas</button>
-            <button class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Acrílicas</button>
-            <button class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Gel</button>
-            <button class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Polygel</button>
+            <center><a href="?tipo=Clásicas" class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Clásicas</a>
+                <a href="?tipo=Acrílicas" class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Acrílicas</a>
+                <a href="?tipo=Gel" class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Gel</a>
+                <a href="?tipo=Polygel" class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32">Polygel</a>
+                <a href="?" class="bg-[#DE98B1] text-white px-4 py-2 rounded-full w-32 text-center">Todas</a>
+            </center>
         </div>
-
-        <!-- Cards de Manicuristas -->
         <div class="container mx-auto py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            <!-- Card 1 -->
-            <div class="border-2 border-[#FF1493] bg-white p-4 rounded-lg shadow-md">
-                <div class="flex flex-col items-center">
-                    <img src="{% static 'img/mujer1.png' %}" alt="Descripción" class="w-32 h-32 rounded-full mb-4">
-                    <h3 class="text-lg font-semibold mb-2">Nombre del Servicio</h3>
-                    <p class="text-gray-600 mb-2">Descripción breve del servicio.</p>
-                    <p class="text-lg font-semibold text-black mb-4">$00.000</p>
-                    <a href="#"
-                        class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition">Reservar</a>
+            {% for s in servicio %}
+            <div class="border-2 border-[#FF1493] bg-white p-4 rounded-lg shadow-md flex flex-col h-full">
+                <div class="flex flex-col items-center mb-auto">
+                    <img src="{{ s.manicurista.profile_picture.url }}" alt="foto" class="w-24 h-24 rounded-full">
+                    <h3 class="text-lg font-semibold mb-2">{{ s.manicurista.name }}</h3>
+                    <h3 class="text-lg font-semibold mb-2">{{ s.tipo_servicio.nombre }}</h3>
+                    <p class="text-gray-600 mb-2"> {{ s.tipo_servicio.descripcion }} </p>
+                    <p class="text-lg font-semibold text-black mb-4">${{ s.valor | intcomma }} </p>
                 </div>
+
+                <div class="flex-grow"></div>
+                <a href="{% url 'calendario' s.id_servicio %}" class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition self-center">
+                    Reservar
+                </a>
             </div>
+            {% endfor %}
 
-            <div class="border-2 border-[#FF1493] bg-white p-4 rounded-lg shadow-md">
-                <div class="flex flex-col items-center">
-                    <img src="{% static 'img/mujer1.png' %}" alt="Descripción" class="w-32 h-32 rounded-full mb-4">
-                    <h3 class="text-lg font-semibold mb-2">Nombre del Servicio</h3>
-                    <p class="text-gray-600 mb-2">Descripción breve del servicio.</p>
-                    <p class="text-lg font-semibold text-black mb-4">$00.000</p>
-                    <a href="#"
-                        class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition">Reservar</a>
-                </div>
-            </div>
-
-            <div class="border-2 border-[#FF1493] bg-white p-4 rounded-lg shadow-md">
-                <div class="flex flex-col items-center">
-                    <img src="{% static 'img/mujer1.png' %}" alt="Descripción" class="w-32 h-32 rounded-full mb-4">
-                    <h3 class="text-lg font-semibold mb-2">Nombre del Servicio</h3>
-                    <p class="text-gray-600 mb-2">Descripción breve del servicio.</p>
-                    <p class="text-lg font-semibold text-black mb-4">$00.000</p>
-                    <a href="#"
-                        class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition">Reservar</a>
-                </div>
-            </div>
-
-
-            <div class="border-2 border-[#FF1493] bg-white p-4 rounded-lg shadow-md">
-                <div class="flex flex-col items-center">
-                    <img src="{% static 'img/mujer1.png' %}" alt="Descripción" class="w-32 h-32 rounded-full mb-4">
-                    <h3 class="text-lg font-semibold mb-2">Nombre del Servicio</h3>
-                    <p class="text-gray-600 mb-2">Descripción breve del servicio.</p>
-                    <p class="text-lg font-semibold text-black mb-4">$00.000</p>
-                    <a href="#"
-                        class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition">Reservar</a>
-                </div>
-            </div>
-
-            <div class="border-2 border-[#FF1493] bg-white p-4 rounded-lg shadow-md">
-                <div class="flex flex-col items-center">
-                    <img src="{% static 'img/mujer1.png' %}" alt="Descripción" class="w-32 h-32 rounded-full mb-4">
-                    <h3 class="text-lg font-semibold mb-2">Nombre del Servicio</h3>
-                    <p class="text-gray-600 mb-2">Descripción breve del servicio.</p>
-                    <p class="text-lg font-semibold text-black mb-4">$00.000</p>
-                    <a href="#"
-                        class="bg-[#FF1493] text-white px-4 py-2 rounded hover:bg-pink-700 transition">Reservar</a>
-                </div>
-            </div>
-
-            
         </div>
 
     </section>
 
 
-    
+
 </div>
 {% endblock %}

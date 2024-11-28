@@ -1,0 +1,86 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="flex min-h-screen bg-gray-100">
+    <script src="{% static 'js/menu.js' %}" defer></script>
+
+    <button id="toggleSidebar" 
+            class="absolute top-4 left-4 z-10 bg-[#DE98B1] text-white p-2 rounded-md shadow-md hover:bg-pink-700 transition">
+        ☰ Menú
+    </button>
+
+    <aside id="sidebar" 
+           class="w-64 bg-white shadow-lg p-5 fixed inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 z-20">
+        <button id="closeSidebar" 
+                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="sr-only">Cerrar menú</span>
+        </button>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Menú</h2>
+        <ul class="space-y-4">
+            <li>
+                <a href="{% url 'misdatos' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis Datos</a>
+            </li>
+            <li>
+                <a href="{% url 'misservicios' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mis Servicios</a>
+            </li>
+            <li>
+                <a href="{% url 'milocal' %}" class="text-[#DE98B1] font-semibold hover:text-pink-500">Mi Local</a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="flex-1 p-10 bg-gray-100">
+        <div class="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-[#FF1493] text-center mb-6">Editar Mis Datos</h2>
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+
+                <div class="text-center">
+                    <label class="block text-sm font-semibold text-gray-700">Foto de Perfil</label>
+                    <input type="file" name="profile_picture" accept="image/*" 
+                           class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Nombre</label>
+                    <input type="text" name="name" value="{{ manicurista.name }}" 
+                           class="block w-full mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 text-gray-900">
+                    {% if form.name.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.name.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Usuario</label>
+                    <input type="text" name="user" value="{{ manicurista.user }}" 
+                           class="block w-full mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 text-gray-900">
+                    {% if form.user.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.user.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">RUT</label>
+                    <input type="text" name="rut" value="{{ manicurista.rut }}" 
+                           class="block w-full mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-pink-500 focus:border-pink-500 text-gray-900">
+                    {% if form.rut.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.rut.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="flex justify-center">
+                    <button type="submit" 
+                            class="bg-[#FF1493] text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-500 transition duration-300">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

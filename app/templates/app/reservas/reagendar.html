@@ -1,0 +1,151 @@
+{% extends 'app/base.html' %}
+{% block contenido %}
+
+<div class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
+      <div class="mb-6 text-center">
+        <h2 class="text-2xl font-semibold text-gray-800">Reagendar tu Hora</h2>
+        <p class="text-gray-600">Selecciona una nueva fecha y hora para reagendar tu cita.</p>
+      </div>
+      <button class="hidden" id="servicio" value="{{ id_servicio }}"></button>
+      <button class="hidden" id="evento" value="{{ id_evento }}"></button>
+      <div id="calendar" class="h-auto"></div>
+    </div>
+</div>
+
+<script defer>
+    const eventosURL = "{% url 'eventos' %}";
+    const crearEventoURL = "{% url 'crear_evento' %}";
+</script>
+
+<script defer>
+    // TODO: Buscar forma de inhabilitar hora de colacion por dia, contemplar la hora al agendar y en la función agregarDiasDeshabilitados
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var id_servicio = document.getElementById('servicio').value;
+        var id_evento = document.getElementById('evento').value;
+
+        function isAnOverlapEvent(eventStartDay, eventEndDay, events) {
+            for (let i = 0; i < events.length; i++) {
+                const eventA = events[i];
+
+                if (eventStartDay > eventA.start && eventStartDay < eventA.end) {
+                    console.log("start-time in between any of the events")
+                    return true;
+                }
+                if (eventEndDay > eventA.start && eventEndDay < eventA.end) {
+                    console.log("end-time in between any of the events")
+                    return true;
+                }
+                if (eventStartDay <= eventA.start && eventEndDay >= eventA.end) {
+                    console.log("any of the events in between/on the start-time and end-time")
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridDay'
+            },
+            buttonText: {
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                list: 'Lista'
+            },
+            slotLabelInterval: '00:30:00',
+            slotLabelFormat: [
+                {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                }
+            ],
+            selectable: true,
+            allDaySlot: false,
+            slotDuration: '00:30:00',
+            slotMinTime: '09:00:00',
+            slotMaxTime: '19:00:00',
+            validRange: {
+                start: new Date().toISOString().slice(0, 10)
+            },
+            events: function (fetchInfo, successCallback, failureCallback) {
+                fetch(`${eventosURL}?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al cargar los eventos');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        successCallback(data);
+                    });
+            },
+            dateClick: function (info) {
+                // Cambiar a la vista de horarios del día seleccionado
+                calendar.changeView('timeGridDay', info.dateStr);
+            },
+            select: function (info) {
+                if (!info.startStr.includes("T")) return;
+                const view = calendar.view;
+                const startFecha = view.currentStart;
+                const endFecha = view.currentEnd;
+
+                let fecha_fin = new Date(info.start);
+
+                // Obtener los eventos dentro del rango de la vista actual
+                const eventosEnVista = calendar.getEvents().filter(evento => {
+                    return (
+                        (evento.start >= startFecha && evento.start < endFecha) ||
+                        (evento.end > startFecha && evento.end <= endFecha)
+                    );
+                });
+
+                fetch(`{% url 'obtener_duracion_servicio' %}?id_servicio=${id_servicio}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.duracion) {
+                            let minutosParaSumar = data.duracion;
+
+                            fecha_fin.setMinutes(fecha_fin.getMinutes() + minutosParaSumar);
+
+                            if (isAnOverlapEvent(info.start, fecha_fin, eventosEnVista)) {
+                                alert('Conflicto: ya existe una reserva en este horario.');
+                                return;
+                            }
+
+                            const currentViewType = calendar.view.type;
+
+                            if (currentViewType === 'timeGridDay') {
+                                fetch(`{% url 'reagendar_evento' %}?start=${info.startStr}&id_servicio=${id_servicio}&id_evento=${id_evento}`)
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Error al cargar los eventos');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        calendar.addEvent(data);
+                                        window.location.href = "{% url 'reagendarExitoso' %}";
+                                    });
+                            } else {
+                                console.log('No se seleccionó una hora específica.');
+                            }
+                        }
+                    })
+            },
+
+        });
+
+        calendar.render();
+    });
+</script>
+
+
+{% endblock %}

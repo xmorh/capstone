@@ -1,0 +1,51 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="container mx-auto py-20 px-6 bg-white rounded-lg shadow-lg h-screen">
+    <h2 class="text-3xl font-bold text-center mb-8 text-[#FF1493]">Registro de Cliente</h2>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div
+        class="p-4 mb-4 text-sm {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} rounded-lg">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-6">
+            <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Nombre Completo</label>
+            <input type="text" id="username" name="username"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                placeholder="Ingresa tu nombre completo" required>
+        </div>
+
+        <div class="mb-6">
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Correo Electrónico</label>
+            <input type="email" id="email" name="email"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                placeholder="Ingresa tu correo electrónico" required>
+        </div>
+
+        <div class="mb-6">
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Contraseña</label>
+            <input type="password" id="password" name="password"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                placeholder="Crea una contraseña" required>
+        </div>
+
+        <div class="mb-6">
+            <label for="confirm_password" class="block mb-2 text-sm font-medium text-gray-700">Confirmar
+                Contraseña</label>
+            <input type="password" id="confirm_password" name="confirm_password"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                placeholder="Confirma tu contraseña" required>
+        </div>
+
+        <button type="submit"
+            class="w-full bg-[#FF1493] text-white font-semibold py-3 rounded-lg hover:bg-pink-500 transition duration-300">Registrarse</button>
+    </form>
+</div>
+{% endblock %}
