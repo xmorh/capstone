@@ -1,14 +1,13 @@
 {% extends 'app/base.html' %}
-{% load static%}
+{% load static %}
 {% block contenido %}
 {% load humanize %}
 
-<div class="h-screen">
-    <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Detalle Reserva Mensual</h2>
+<div class="h-screen bg-gray-100">
+    <h2 class="text-4xl font-bold mb-8 text-black text-center py-5">Detalle Reserva Mensual</h2>
 
-    <div class=" flex items-center justify-center py-10">
-        <div class="max-w-4xl w-full bg-white rounded-lg shadow-lg p-6">
-
+    <div class="flex items-center justify-center py-10">
+        <div class="max-w-5xl w-full bg-white rounded-lg shadow-lg p-6">
             <!-- Tabla de Reservas -->
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -17,7 +16,7 @@
                         <th class="py-3 px-4">Duración</th>
                         <th class="py-3 px-4">Valor</th>
                         <th class="py-3 px-4">Cliente</th>
-                        <th class="py-3 px-4">Hora</th>
+                        <th class="py-3 px-4">Fecha - Hora</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,11 +25,18 @@
                         <td class="py-3 px-4"> {{ evento.servicio.tipo_servicio.duracion }} minutos </td>
                         <td class="py-3 px-4"> ${{ evento.servicio.valor | intcomma }} </td>
                         <td class="py-3 px-4"> {{ evento.cliente }} </td>
-                        <td class="py-3 px-4"> {{ evento.fecha_inicio }} </td>
+                        <td class="py-3 px-4"> {{ evento.fecha_inicio }}hrs. </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <div class="flex justify-center mt-8">
+        <button onclick="window.history.back()" 
+        class="w-full sm:w-auto bg-[#FF1493] text-white font-semibold py-3 px-6 rounded-lg hover:bg-pink-500 transition duration-300 shadow-md">
+            Volver
+        </button>
+    </div>
 </div>
-{% endblock%}
+{% endblock %}

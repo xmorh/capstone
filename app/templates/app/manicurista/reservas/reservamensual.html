@@ -80,12 +80,12 @@
         margin-top: 20px;
     }
 </style>
-
+<div class="min-h-screen">
 <h2 class="text-3xl font-bold mb-6 text-black text-center py-5">Reservas del Mes </h2>
 
-<div id="calendar" class="w-full h-[500px]"></div>
+<div id="calendar" class="w-full h-[700px]"></div>
 
-
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const calendarEl = document.getElementById('calendar');
@@ -93,10 +93,24 @@
             initialView: 'dayGridMonth',
             locale: 'es',
             headerToolbar: {
-                left: 'prev,next today',
+                left: 'prev,next',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
+            },buttonText: {
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                list: 'Lista'
+            },slotLabelInterval: '00:30:00',
+            slotLabelFormat: [
+                {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                }
+            ],
+            slotMinTime: '09:00:00',
+            slotMaxTime: '19:00:00',
             events:
                 '{% url "eventosMani" %}',
 

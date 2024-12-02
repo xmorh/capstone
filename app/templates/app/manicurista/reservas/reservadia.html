@@ -60,13 +60,13 @@
                     {% for e in evento %}
                     <tr class="bg-transparent text-black">
                         <td class="py-3 px-4"> {{ e.servicio.tipo_servicio.nombre }} </td>
-                        <td class="py-3 px-4"> {{ e.servicio.tipo_servicio.duracion }} </td>
+                        <td class="py-3 px-4"> {{ e.servicio.tipo_servicio.duracion }} min.</td>
                         <td class="py-3 px-4"> ${{e.servicio.valor | intcomma }} </td>
                         <td class="py-3 px-4"> {{ e.cliente }} </td>
-                        <td class="py-3 px-4"> {{ e.fecha_inicio }} </td>
-                        <td class="py-3 px-4 text-center">
+                        <td class="py-3 px-4"> {{ e.hora_formateada }} hrs.</td>
+                        <td class="py-3 px-4">
                             <a href="{% url 'cancelarEvento' e.id %}"
-                                class="bg-red-500 text-white font-bold py-1 px-2 rounded-full mx-1 hover:bg-red-600">Eliminar</a>
+                                class="inline-block text-white font-semibold py-1 mt-2 px-6 rounded-lg bg-red-600 hover:bg-red-500 transition duration-300 shadow ">Cancelar</a>
 
                         </td>
                     </tr>

@@ -8,21 +8,24 @@
         Únete a nuestra comunidad de manicuristas profesionales y empieza a ofrecer tus servicios a una amplia red de
         clientes. Completa el siguiente formulario para comenzar.
     </p>
-    <form method="post" enctype="multipart/form-data" action="">
+    <form id="rutForm" method="post" enctype="multipart/form-data" action="">
         {% csrf_token %}
-        
+
         <div class="mb-6">
             <label for="username" class="block mb-2 text-sm font-medium text-gray-700">Nombre de Usuario</label>
             <input type="text" id="username" name="username"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                placeholder="Ingresa tu nombre de usuario" required>
+                placeholder="Ingresa tu nombre de usuario" required
+                pattern="^[a-zA-Z0-9]+$" title="El nombre de usuario solo puede contener letras y números">
         </div>
 
         <div class="mb-6">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Nombre Completo</label>
             <input type="text" id="name" name="name"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                placeholder="Ingresa tu nombre completo" required>
+                placeholder="Ingresa tu nombre completo" required
+                pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+(\s[a-zA-ZáéíóúÁÉÍÓÚüÜ]+)+$" 
+                title="El nombre completo debe contener al menos dos palabras, solo con letras y espacios">
         </div>
 
         <div class="mb-6">
@@ -36,10 +39,12 @@
             <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Contraseña</label>
             <div class="relative">
                 <input type="password" id="password" name="password"
-                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                       placeholder="Crea una contraseña" required>
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
+                    placeholder="Crea una contraseña" required>
                 <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-3 flex items-center">
-                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
                         <circle cx="12" cy="12" r="3" />
                     </svg>
@@ -51,7 +56,8 @@
             <label for="rut" class="block mb-2 text-sm font-medium text-gray-700">RUT</label>
             <input type="text" id="rut" name="rut"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
-                placeholder="Ingresa tu RUT" required>
+                placeholder="12345678-9 o 12.345.678-9" required>
+            <p id="resultado" class="text-sm mt-2"></p>
         </div>
 
         <div class="mb-6 text-center">
@@ -72,7 +78,7 @@
             <input type="file" id="certifications" name="certifications" accept=".pdf"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DE98B1]"
                 required>
-            <p class="text-sm text-gray-500 mt-2">Puedes subir múltiples archivos si es necesario.</p>
+            <p class="text-sm text-gray-500 mt-2">Puedes subir un solo archivo.</p>
         </div>
 
         <button type="submit"
@@ -97,7 +103,7 @@
     function togglePassword() {
         const passwordField = document.getElementById('password');
         const eyeIcon = document.getElementById('eyeIcon');
-        
+
         if (passwordField.type === 'password') {
             passwordField.type = 'text';
             eyeIcon.innerHTML = `
@@ -112,5 +118,50 @@
             `;
         }
     }
+
+    document.getElementById("rutForm").addEventListener("submit", function (event) {
+        const rutInput = document.getElementById("rut").value.trim();
+        const resultado = document.getElementById("resultado");
+
+        if (!validarRut(rutInput)) {
+            event.preventDefault();
+            resultado.textContent = "El RUT es inválido.";
+            resultado.style.color = "red";
+        } else {
+            resultado.textContent = "El RUT es válido.";
+            resultado.style.color = "green";
+        }
+    });
+
+    function validarRut(rutCompleto) {
+        const rut = rutCompleto.replace(/[.]/g, "").toUpperCase();
+        const regex = /^[0-9]+-[0-9K]$/;
+        if (!regex.test(rut)) {
+            return false;
+        }
+        const [numero, dv] = rut.split("-");
+        const dvEsperado = calcularDV(numero);
+        return dv === dvEsperado;
+    }
+
+    function calcularDV(rut) {
+        let suma = 0;
+        let multiplicador = 2;
+
+        for (let i = rut.length - 1; i >= 0; i--) {
+            suma += parseInt(rut[i]) * multiplicador;
+            multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+        }
+
+        const residuo = 11 - (suma % 11);
+        if (residuo === 11) {
+            return "0";
+        } else if (residuo === 10) {
+            return "K";
+        } else {
+            return residuo.toString();
+        }
+    }
+
 </script>
 {% endblock %}

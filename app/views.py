@@ -112,7 +112,7 @@ def infoprofesional(request):
     return render(request, 'app/manicurista/infoprofesional.html')
 
 def misreservas(request):
-    print(request.user)
+    # print(request.user)
 
     eventos = Evento.objects.filter(cliente=request.user)
 
@@ -277,35 +277,22 @@ def detallereserva(request, event_id):
 @login_required
 @group_required('manicurista')
 def reservasdia(request):
-    print('pasoo')
-    is_manicurista = request.user.groups.filter(name='manicurista').exists()
-    if is_manicurista:
-        manicurista = Manicurista.objects.filter(user=request.user).first()
-        if manicurista and not manicurista.state:
-            # Redirige si el manicurista no está aprobado
-            return redirect('espera_aprobacion') 
-    # Renderiza la página de reservas si está aprobado
 
     manicurista = request.user.manicurista
 
     fecha_hoy = now().date()
-    print(fecha_hoy)
+    # print(fecha_hoy)
     eventos_hoy = Evento.objects.filter(
         manicurista=manicurista,
         fecha_inicio__date=fecha_hoy
     )
 
-    print(eventos_hoy)
-
-    context = {
-        'evento': eventos_hoy
-    }
+    for evento in eventos_hoy:
+        evento.hora_formateada = evento.fecha_inicio.strftime("%H:%M")
 
     return render(request, 'app/manicurista/reservas/reservadia.html', {
-        'is_manicurista': is_manicurista, 
         'manicurista': manicurista,
         'evento': eventos_hoy,
-        'context': context
         })
 
 
@@ -445,7 +432,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             if user.groups.filter(name='manicurista').exists():
-                print(user.groups.all())
+                # print(user.groups.all())
                 return redirect('reservasdia')
             elif user.groups.filter(name='cliente').exists():
                 return redirect('home')
