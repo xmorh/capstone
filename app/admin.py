@@ -17,6 +17,7 @@ class ServicioAdmin(admin.ModelAdmin):
 class TipoServicioAdmin(admin.ModelAdmin):
     list_display = ('id_tipo_servicio','nombre', 'duracion', 'descripcion')
     list_filter = ('nombre',)
+    list_per_page = 10
 
 class EventoAdmin(admin.ModelAdmin):
     list_display = ('cliente', 'servicio', 'manicurista', 'fecha_inicio', 'fecha_fin',)
@@ -24,8 +25,11 @@ class EventoAdmin(admin.ModelAdmin):
     search_fields = ('fecha_inicio','manicurista')
     list_per_page = 10
 
+class ManicuristaAdmin(admin.ModelAdmin):
+    list_per_page = 15
+
 admin.site.register(Reserva)
-admin.site.register(Manicurista)
+admin.site.register(Manicurista, ManicuristaAdmin)
 admin.site.register(Servicio, ServicioAdmin)
 admin.site.register(TipoServicio,TipoServicioAdmin)
 admin.site.register(Evento, EventoAdmin)
