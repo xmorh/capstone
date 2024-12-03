@@ -2,7 +2,8 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import get_user_model
-from .models import Manicurista, Servicio, TipoServicio, Reserva, Local
+from django.core.exceptions import ValidationError
+from .models import Manicurista, Servicio, TipoServicio, Reserva, Local, Comuna
 
 
 class ReservaForm(forms.ModelForm):
@@ -101,6 +102,15 @@ class LocalForm(forms.ModelForm):
     class Meta:
         model = Local
         fields = ['nombre', 'numero_telefono', 'direccion', 'comuna',]
+    
+
+    def clean_numero_telefono(self):
+        numero_telefono = self.cleaned_data.get('numero_telefono')
+        if not numero_telefono.isdigit():
+            raise ValidationError("El número de teléfono solo puede contener dígitos.")
+        if len(numero_telefono) != 9:
+            raise ValidationError("El número de teléfono debe tener 9 dígitos.")
+        return numero_telefono
 
 
 class ManicuristaForm(forms.ModelForm):

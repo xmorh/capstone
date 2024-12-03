@@ -650,6 +650,7 @@ def editarLocal(request, id_local):
 @login_required
 @group_required('manicurista')
 def local(request):
+    print('paso local')
     is_manicurista = request.user.groups.filter(name='manicurista').exists()
     if is_manicurista:
         manicurista = Manicurista.objects.filter(user=request.user).first()
@@ -660,6 +661,8 @@ def local(request):
 
     try:
         local = Local.objects.get(manicurista=manicurista)
+        
+        print('local: ', local)
     except Local.DoesNotExist:
         local = None 
     context = {
@@ -677,14 +680,15 @@ def milocal(request):
         if manicurista and not manicurista.state:
             return redirect('espera_aprobacion')
 
-    local = Local.objects.filter(manicurista=manicurista).select_related('local')
+    local = Local.objects.filter(manicurista=manicurista)
+    # print(local)
     data = {
         'form': LocalForm(),
         'local': local,
         'is_manicurista': is_manicurista,
     }
-
     if request.method == 'POST':
+
         formulario = LocalForm(request.POST, files=request.FILES)
         if formulario.is_valid():
             local = formulario.save(commit=False)
